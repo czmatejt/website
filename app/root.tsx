@@ -10,6 +10,12 @@ import {
 import type { Route } from "./+types/root";
 import "./app.css";
 
+import { SuperTokensWrapper } from "supertokens-auth-react"; // <--- Import this
+import { initSuperTokens } from "./config/supertokens"; // <--- Import this
+
+// 1. Initialize immediately
+initSuperTokens();
+
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
   {
@@ -33,7 +39,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
-        {children}
+        <SuperTokensWrapper>{children}</SuperTokensWrapper>
         <ScrollRestoration />
         <Scripts />
       </body>
