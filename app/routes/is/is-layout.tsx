@@ -19,7 +19,7 @@ export default function ISLayout() {
   if (session.loading) {
     return <div>Loading...</div>;
   }
-  const userRoles = session.accessTokenPayload["st-role"]["v"].map((r: string) => r.replace("role-", ""));
+  const userRoles = session.accessTokenPayload["st-role"]?.["v"].map((r: string) => r.replace("role-", "")) || [];
 
   return (
     <SessionAuth>
