@@ -1,10 +1,10 @@
-import { Outlet } from "react-router";
+import { Outlet, useLocation } from "react-router";
 import { SessionAuth } from "supertokens-auth-react/recipe/session";
 
 import { useEffect, useState } from "react";
 import { Activity, List, Menu } from "lucide-react";
 import { Button } from "~/components/ui/button";
-import { Sheet, SheetContent, SheetTrigger } from "~/components/ui/sheet";
+import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "~/components/ui/sheet";
 import { ModuleSwitcher } from "~/components/shared/ModuleSwitcher";
 import { UserNav } from "~/components/shared/UserNav"; // Your existing User Pill
 import { AppSidebar } from "~/components/shared/AppSidebar";
@@ -20,6 +20,17 @@ export default function ISLayout() {
     return <div>Loading...</div>;
   }
   const userRoles = session.accessTokenPayload["st-role"]?.["v"].map((r: string) => r.replace("role-", "")) || [];
+
+  // Determine current section for the sheet title (mobile drawer)
+  const location = useLocation();
+  const pathname = location.pathname;
+  let currentSection = "portal";
+  if (pathname.includes("/is/trainer")) currentSection = "trainer";
+  if (pathname.includes("/is/athlete")) currentSection = "athlete";
+  if (pathname.includes("/is/guardian")) currentSection = "guardian";
+  if (pathname.includes("/is/admin")) currentSection = "admin";
+  if (pathname.includes("/is/account")) currentSection = "account";
+  const displayTitle = currentSection.charAt(0).toUpperCase() + currentSection.slice(1);
 
   return (
     <SessionAuth>
@@ -38,7 +49,10 @@ export default function ISLayout() {
                   <Menu className="h-5 w-5" />
                 </Button>
               </SheetTrigger>
-              <SheetContent side="left" className="w-64 p-0 pt-10">
+              <SheetContent side="left" className="w-64 p-0">
+                <SheetHeader className="sticky top-0 z-20 px-3 pt-4 bg-background">
+                  <SheetTitle className="text-base">{displayTitle}</SheetTitle>
+                </SheetHeader>
                 <AppSidebar />
               </SheetContent>
             </Sheet>

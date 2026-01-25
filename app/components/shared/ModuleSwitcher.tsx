@@ -103,6 +103,7 @@ export function ModuleSwitcher({ userRoles }: { userRoles: string[] }) {
                   ))}
                 </CommandGroup>
                 <CommandSeparator className="color-black"/>
+                <CommandSeparator className="my-2 h-px bg-slate-200 dark:bg-slate-700 w-full"/>
                 <CommandGroup heading="">
                   <CommandItem
                       key="account"
@@ -155,7 +156,7 @@ export function ModuleSwitcher({ userRoles }: { userRoles: string[] }) {
                 </Button>
             );
         })}
-        <Separator className="h-6 mx-1 color-foreground" aria-orientation="vertical"/>
+        <Separator className="h-6 w-px mx-2 bg-slate-200 dark:bg-slate-700" aria-orientation="vertical"/>
         <Button
             variant={activeModule?.id === "account" ? "secondary" : "ghost"}
             size="sm"

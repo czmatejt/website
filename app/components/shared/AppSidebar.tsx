@@ -25,17 +25,8 @@ export function AppSidebar() {
 
   const items = MENUS[currentSection] || MENUS.portal;
 
-  // Friendly display title for the current section (used on mobile)
-  const displayTitle =
-    currentSection.charAt(0).toUpperCase() + currentSection.slice(1);
-
   return (
     <nav className="space-y-1 p-2">
-      {/* Mobile-only section title for clarity */}
-      <div className="px-3 pb-2 md:hidden">
-        <h3 className="text-sm font-semibold text-foreground">{displayTitle}</h3>
-      </div>
-
       {items.map((item) => {
         const isActive = pathname === item.href;
         return (
