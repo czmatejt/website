@@ -10,8 +10,9 @@ import {
 import type { Route } from "./+types/root";
 import "./app.css";
 
-import { SuperTokensWrapper } from "supertokens-auth-react"; // <--- Import this
-import { initSuperTokens } from "./config/supertokens"; // <--- Import this
+import { SuperTokensWrapper } from "supertokens-auth-react";
+import { initSuperTokens } from "./config/supertokens"; 
+import { ThemeProvider } from "./components/shared/theme-provider";
 
 // 1. Initialize immediately
 initSuperTokens();
@@ -39,7 +40,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
-        <SuperTokensWrapper>{children}</SuperTokensWrapper>
+        <ThemeProvider>
+          <SuperTokensWrapper>
+            {children}
+            </SuperTokensWrapper>
+        </ThemeProvider>
         <ScrollRestoration />
         <Scripts />
       </body>

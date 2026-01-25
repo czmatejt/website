@@ -1,13 +1,8 @@
 import SuperTokens from "supertokens-auth-react";
 import EmailPassword from "supertokens-auth-react/recipe/emailpassword";
 import Session from "supertokens-auth-react/recipe/session";
-
-
-function getCookie(name: string) {
-  const value = `; ${document.cookie}`;
-  const parts = value.split(`; ${name}=`);
-  if (parts.length === 2) return parts.pop()?.split(";").shift();
-}
+import Cookies  from "js-cookie";
+import { API_URL, WEBSITE_URL } from "./domains";
 
 export const initSuperTokens = () => {
   // Prevent this from running on the server (SSR)
@@ -16,8 +11,8 @@ export const initSuperTokens = () => {
   SuperTokens.init({
     appInfo: {
       appName: "AK Kurim Website",
-      apiDomain: "http://192.168.0.9:8000",
-      websiteDomain: "http://192.168.0.9:3000",
+      apiDomain: API_URL,
+      websiteDomain: WEBSITE_URL,
       apiBasePath: "/auth",
       websiteBasePath: "/auth",
     },
@@ -27,7 +22,7 @@ export const initSuperTokens = () => {
     ],
     getRedirectionURL: async (context: any) => {
         if (context.action === "SUCCESS") {
-            const lastSelectedModule = getCookie("last_module");
+            const lastSelectedModule = Cookies.get("last_module");
             if (lastSelectedModule) return `${lastSelectedModule}`;
 
             return "/is/";

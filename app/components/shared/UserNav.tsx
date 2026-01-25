@@ -4,7 +4,9 @@ import {
   User, 
   Settings, 
   Loader2, 
-  ChevronDown
+  ChevronDown,
+  Sun,
+  Moon
 } from "lucide-react";
 import { 
   Avatar, 
@@ -23,9 +25,12 @@ import {
 } from "~/components/ui/dropdown-menu";
 import { signOut } from "supertokens-auth-react/recipe/emailpassword";
 import { useSessionContext } from "supertokens-auth-react/recipe/session";
+import { UserService } from "~/services/user"; 
+import { useTheme } from "~/components/shared/theme-provider";
 
 export function UserNav() {
   const session = useSessionContext();
+  const { theme, setTheme } = useTheme();
   const [userName, setUserName] = useState<string | null>(null);
   const [userEmail, setUserEmail] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
@@ -34,11 +39,7 @@ export function UserNav() {
   useEffect(() => {
     async function fetchProfile() {
       try {
-        // REPLACE with your actual Fast API endpoint
-        const res = await fetch("http://192.168.0.9:8000/me"  );
-        // For now, I'll simulate a delay
-        //await new Promise(r => setTimeout(r, 500));
-        const profile = res.ok ? await res.json() : null;
+        const profile = await UserService.getProfile();
         setUserName(profile?.full_name || "User ?");
         setUserEmail(profile?.email || null);
       } catch (error) {
@@ -75,7 +76,7 @@ export function UserNav() {
       <DropdownMenuTrigger asChild>
         <Button variant="outline" className="relative h-10 w-auto gap-2 rounded-full pl-4 pr-2 hover:bg-slate-100">
           {/* CHANGE 2: Display Name (Hidden on very small phones if needed, or always show) */}
-          <span className="text-sm font-medium md:inline-block">
+          <span className="hidden text-sm font-medium md:inline-block">
             {loading ? "Loading..." : userName}
           </span>
           {/* CHANGE 3: The Avatar is now smaller and sits inside the button */}
@@ -88,8 +89,7 @@ export function UserNav() {
           {/* Optional: Add a tiny chevron to indicate it's a menu */}
           <ChevronDown className="h-3 w-3 text-slate-400" />
         </Button>
-      </DropdownMenuTrigger>
-      
+      </DropdownMenuTrigger>      
       <DropdownMenuContent className="w-56" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
@@ -113,6 +113,21 @@ export function UserNav() {
             <Settings className="mr-2 h-4 w-4" />
             <span>Settings</span>
           </DropdownMenuItem>
+
+          {/* --- THEME TOGGLE ITEM --- */}
+          <DropdownMenuItem 
+            className="cursor-pointer md:hidden"
+            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+          >
+            {theme !== "dark" ? (
+               <Sun className="mr-2 h-4 w-4" />
+            ) : (
+               <Moon className="mr-2 h-4 w-4" />
+            )}
+            <span>Toggle Theme</span>
+          </DropdownMenuItem>
+          {/* ------------------------- */}
+
         </DropdownMenuGroup>
         
         <DropdownMenuSeparator />
@@ -126,5 +141,6 @@ export function UserNav() {
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
+
   );
 }

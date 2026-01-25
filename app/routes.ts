@@ -12,7 +12,11 @@ export default [
   ...prefix("is", [
      layout("routes/is/is-layout.tsx", [
 
-        index("routes/is/select-module.tsx"),
+      // can I redirect /is to /is/portal?
+        
+        index("routes/is/is-redirect.tsx"),
+        
+        route("portal", "routes/is/portal.tsx"),
 
         // This becomes /is/profile
         route("profile", "routes/is/profile.tsx"),
