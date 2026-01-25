@@ -1,4 +1,5 @@
 import { type RouteConfig, index, layout, route, prefix } from "@react-router/dev/routes";
+import { rootCertificates } from "tls";
 
 export default [
   // 1. PUBLIC LANDING PAGE (mydomain.cz)
@@ -21,8 +22,16 @@ export default [
         
         route("portal", "routes/is/portal.tsx"),
 
-        // This becomes /is/account
-        route("account", "routes/is/account.tsx"),
+        ...prefix("account", [
+          index("modules/account/routes/account-redirect.tsx"), // /is/account
+
+          route("general", "modules/account/routes/general.tsx"), // /is/account
+          route("security", "modules/account/routes/security.tsx"), // /is/account
+        ]),
+
+        // Trainer Module
+        // TODO
+    
         
         // This becomes /is/trainer/roster
         //route("trainer/roster", "routes/trainer/roster.tsx"),

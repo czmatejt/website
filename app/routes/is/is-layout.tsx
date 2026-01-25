@@ -77,8 +77,8 @@ export default function ISLayout() {
               className="hidden h-16 w-16 object-contain md:block" // object-contain ensures it doesn't stretch
               />
           </a>
-          <div className="hidden font-bold text-xl tracking-tight text-blue-600 md:block mr-3">
-            IS AK KURIM
+          <div className="hidden font-bold text-xl tracking-tight md:block mr-3">
+            KLUBIS
           </div>
           {/* --- END LOGO LOGIC --- */}
         </div>

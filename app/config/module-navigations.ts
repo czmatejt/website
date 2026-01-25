@@ -29,7 +29,7 @@ export const MODULE_NAVIGATIONS: Record<string, ModuleNavigation[]> = {
         { title: "Home", href: "/is/portal", icon: LayoutDashboard }
     ],
     account: [
-        { title: "General", href: "/is/account", icon: Users },
+        { title: "General", href: "/is/account/general", icon: Users },
         { title: "Security", href: "/is/account/security", icon: ShieldCheck }
 
     ]

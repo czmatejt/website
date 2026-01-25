@@ -46,7 +46,7 @@ export function ModuleSwitcher({ userRoles }: { userRoles: string[] }) {
   ) || { 
     id: "account", 
     label: "Account", 
-    path: "/is/account", 
+    path: "/is/account/general", 
     icon: User,
     description: "View and edit your account details."
   }; // Fallback to account if none match
@@ -161,8 +161,8 @@ export function ModuleSwitcher({ userRoles }: { userRoles: string[] }) {
             variant={activeModule?.id === "account" ? "secondary" : "ghost"}
             size="sm"
             onClick={() => { 
-              Cookies.set("lastModule", "/is/account");
-              navigate("/is/account");
+              Cookies.set("lastModule", "/is/account/general");
+              navigate("/is/account/general");
             }}
             className={cn(
                 "gap-2 text-sm transition-all",
