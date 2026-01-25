@@ -10,7 +10,7 @@ import { UserNav } from "~/components/shared/UserNav"; // Your existing User Pil
 import { AppSidebar } from "~/components/shared/AppSidebar";
 import { useSessionContext } from "supertokens-auth-react/recipe/session";
 import { ModeToggle } from "~/components/shared/mode-toggle";
-
+import logo from "~/assets/images/akkurim-logo.webp";
 
 
 export default function ISLayout() {
@@ -48,13 +48,25 @@ export default function ISLayout() {
           
           {/* A. Mobile Logo (Icon Only) */}
           <div className="flex items-center justify-center md:hidden text-blue-600">
-             <Activity className="h-6 w-6" /> {/* Replace with your specific SVG/Icon */}
+            <img 
+              src={logo} 
+              alt="AKKURIM Logo" 
+              className="h-8 w-8 object-contain" // object-contain ensures it doesn't stretch
+              />
           </div>
 
           {/* Desktop Logo (Hidden on Mobile) */}
-          <div className="hidden font-bold text-xl tracking-tight text-blue-600 md:block mr-6">
+          <a href="/">
+          <img 
+              src={logo} 
+              alt="AKKURIM Logo" 
+              className="hidden h-16 w-16 object-contain md:block" // object-contain ensures it doesn't stretch
+              />
+          </a>
+          <div className="hidden font-bold text-xl tracking-tight text-blue-600 md:block mr-3">
             IS AK KURIM
           </div>
+          {/* --- END LOGO LOGIC --- */}
         </div>
 
         {/* 2. CENTER: Module Switcher */}
@@ -64,7 +76,10 @@ export default function ISLayout() {
 
         {/* 3. RIGHT: User Nav */}
         <div className="flex items-center gap-2">
-           <UserNav />
+          <UserNav />
+          <div className="hidden md:block">
+            <ModeToggle />
+          </div>
         </div>
 
       </header>

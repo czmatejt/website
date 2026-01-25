@@ -2,7 +2,10 @@ import { type RouteConfig, index, layout, route, prefix } from "@react-router/de
 
 export default [
   // 1. PUBLIC LANDING PAGE (mydomain.cz)
-  index("routes/home.tsx"), // Your public marketing page
+  //index("routes/home.tsx"), // Your public marketing page
+
+  // temporarily redirecting home to external site
+  route("", "routes/home-redirect.tsx"),
 
   // 2. AUTH (mydomain.cz/auth)
   route("auth/*", "routes/auth.tsx"),
