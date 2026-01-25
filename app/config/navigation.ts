@@ -49,5 +49,5 @@ export const APP_MODULES: AppModule[] = [
     path: "/is/admin/overview",
     icon: ShieldCheck,
     description: "Platform settings and users."
-  }
+  },
 ];

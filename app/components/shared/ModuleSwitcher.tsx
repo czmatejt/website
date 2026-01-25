@@ -1,11 +1,8 @@
 import { useLocation, useNavigate } from "react-router";
 import { 
   ChevronsUpDown, 
-  Check, 
-  Users, 
-  Trophy, 
-  ShieldCheck,
-  LayoutGrid
+  Check,  
+  User,
 } from "lucide-react";
 
 import { cn } from "~/lib/utils";
@@ -27,6 +24,8 @@ import { useState } from "react";
 
 import { APP_MODULES } from "~/config/navigation"; 
 import Cookies from "js-cookie";
+import { Separator } from "@radix-ui/react-dropdown-menu";
+import { CommandSeparator } from "cmdk";
 
 export function ModuleSwitcher({ userRoles }: { userRoles: string[] }) {
   const [open, setOpen] = useState(false);
@@ -42,10 +41,15 @@ export function ModuleSwitcher({ userRoles }: { userRoles: string[] }) {
   // 2. Detect Active Module
   const activeModule = availableModules.find(
     (module) => {
-        if (module.id === "portal") return location.pathname === "/is" || location.pathname === "/is/";
         return location.pathname.startsWith(`/is/${module.id}`);
     }
-  ) || availableModules[0];
+  ) || { 
+    id: "account", 
+    label: "Account", 
+    path: "/is/account", 
+    icon: User,
+    description: "View and edit your account details."
+  }; // Fallback to account if none match
 
   return (
     <>
@@ -73,7 +77,7 @@ export function ModuleSwitcher({ userRoles }: { userRoles: string[] }) {
           
           <PopoverContent className="w-[200px] p-0">
             <Command>
-              <CommandInput placeholder="Search module..." />
+              {/*<CommandInput placeholder="Search module..." />*/}
               <CommandList>
                 <CommandEmpty>No module found.</CommandEmpty>
                 <CommandGroup heading="My Modules">
@@ -97,6 +101,27 @@ export function ModuleSwitcher({ userRoles }: { userRoles: string[] }) {
                       />
                     </CommandItem>
                   ))}
+                </CommandGroup>
+                <CommandSeparator className="color-black"/>
+                <CommandGroup heading="">
+                  <CommandItem
+                      key="account"
+                      onSelect={() => {
+                        Cookies.set("lastModule", "/is/account");
+                        navigate("/is/account");
+                        setOpen(false);
+                      }}
+                      className="cursor-pointer"
+                    >
+                      <User className="mr-2 h-4 w-4" />
+                      Account
+                      <Check
+                        className={cn(
+                          "ml-auto h-4 w-4",
+                          activeModule?.id === "account" ? "opacity-100" : "opacity-0"
+                        )}
+                      />
+                    </CommandItem>
                 </CommandGroup>
               </CommandList>
             </Command>
@@ -130,6 +155,24 @@ export function ModuleSwitcher({ userRoles }: { userRoles: string[] }) {
                 </Button>
             );
         })}
+        <Separator className="h-6 mx-1 color-foreground" aria-orientation="vertical"/>
+        <Button
+            variant={activeModule?.id === "account" ? "secondary" : "ghost"}
+            size="sm"
+            onClick={() => { 
+              Cookies.set("lastModule", "/is/account");
+              navigate("/is/account");
+            }}
+            className={cn(
+                "gap-2 text-sm transition-all",
+                activeModule?.id === "account" 
+                    ? "bg-slate-100 font-semibold text-slate-900 shadow-sm" 
+                    : "text-slate-500 hover:text-slate-900"
+            )}
+        >
+            <User className={cn("h-4 w-4", activeModule?.id === "account" ? "text-blue-600" : "text-slate-400")} />
+            Account
+        </Button>
       </div>
     </>
   );

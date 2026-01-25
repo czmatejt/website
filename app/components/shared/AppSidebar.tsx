@@ -6,37 +6,36 @@ import {
   Users, 
   ClipboardList 
 } from "lucide-react";
+import { MODULE_NAVIGATIONS } from "~/config/module-navigations";
 
 export function AppSidebar() {
   const location = useLocation();
   const pathname = location.pathname;
 
-  // Define menus for each module // TODO Fetch from config/navigation.ts
-  const MENUS: Record<string, any[]> = {
-    trainer: [
-      { title: "Dashboard", href: "/is/trainer/dashboard", icon: LayoutDashboard },
-      { title: "Roster", href: "/is/trainer/roster", icon: Users },
-      { title: "Attendance", href: "/is/trainer/attendance", icon: ClipboardList },
-    ],
-    athlete: [
-      { title: "Schedule", href: "/is/athlete/schedule", icon: Calendar },
-      { title: "My Stats", href: "/is/athlete/stats", icon: LayoutDashboard },
-    ],
-    // Default fallback (e.g. for the Portal)
-    portal: [
-      { title: "Home", href: "/is", icon: LayoutDashboard }
-    ]
-  };
+  // Define menus for each module
+  const MENUS = MODULE_NAVIGATIONS;
 
   // Determine which menu to show based on URL
   let currentSection = "portal";
   if (pathname.includes("/is/trainer")) currentSection = "trainer";
   if (pathname.includes("/is/athlete")) currentSection = "athlete";
+  if (pathname.includes("/is/guardian")) currentSection = "guardian";
+  if (pathname.includes("/is/admin")) currentSection = "admin";
+  if (pathname.includes("/is/account")) currentSection = "account";
 
   const items = MENUS[currentSection] || MENUS.portal;
 
+  // Friendly display title for the current section (used on mobile)
+  const displayTitle =
+    currentSection.charAt(0).toUpperCase() + currentSection.slice(1);
+
   return (
     <nav className="space-y-1 p-2">
+      {/* Mobile-only section title for clarity */}
+      <div className="px-3 pb-2 md:hidden">
+        <h3 className="text-sm font-semibold text-foreground">{displayTitle}</h3>
+      </div>
+
       {items.map((item) => {
         const isActive = pathname === item.href;
         return (

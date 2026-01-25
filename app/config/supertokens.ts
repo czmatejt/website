@@ -22,7 +22,7 @@ export const initSuperTokens = () => {
     ],
     getRedirectionURL: async (context: any) => {
         if (context.action === "SUCCESS") {
-            const lastSelectedModule = Cookies.get("last_module");
+            const lastSelectedModule = Cookies.get("lastModule");
             if (lastSelectedModule) return `${lastSelectedModule}`;
 
             return "/is/";

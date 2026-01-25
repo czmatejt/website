@@ -27,10 +27,12 @@ import { signOut } from "supertokens-auth-react/recipe/emailpassword";
 import { useSessionContext } from "supertokens-auth-react/recipe/session";
 import { UserService } from "~/services/user"; 
 import { useTheme } from "~/components/shared/theme-provider";
+import { Navigate, useNavigate } from "react-router";
 
 export function UserNav() {
   const session = useSessionContext();
   const { theme, setTheme } = useTheme();
+  const navigate = useNavigate();
   const [userName, setUserName] = useState<string | null>(null);
   const [userEmail, setUserEmail] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
@@ -105,14 +107,14 @@ export function UserNav() {
         <DropdownMenuSeparator />
         
         <DropdownMenuGroup>
-          <DropdownMenuItem className="cursor-pointer">
+          <DropdownMenuItem className="cursor-pointer" onClick={() => navigate("/is/account")}>
             <User className="mr-2 h-4 w-4" />
-            <span>Profile</span>
+            <span>Account</span>
           </DropdownMenuItem>
-          <DropdownMenuItem className="cursor-pointer">
+          {/* <DropdownMenuItem className="cursor-pointer">
             <Settings className="mr-2 h-4 w-4" />
             <span>Settings</span>
-          </DropdownMenuItem>
+          </DropdownMenuItem> */}
 
           {/* --- THEME TOGGLE ITEM --- */}
           <DropdownMenuItem 

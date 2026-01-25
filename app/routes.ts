@@ -22,7 +22,7 @@ export default [
         route("portal", "routes/is/portal.tsx"),
 
         // This becomes /is/profile
-        route("profile", "routes/is/profile.tsx"),
+        route("account", "routes/is/account.tsx"),
         
         // This becomes /is/trainer/roster
         //route("trainer/roster", "routes/trainer/roster.tsx"),
