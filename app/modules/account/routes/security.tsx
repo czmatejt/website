@@ -140,7 +140,7 @@ export default function SecurityPage() {
             <span className="text-sm text-red-800 font-medium">
                 Log out of all devices?
             </span>
-            <Button variant="destructive" size="sm" onClick={handleRevokeSessions}>
+            <Button className="hover:text-red-900" variant="destructive" size="sm" onClick={handleRevokeSessions}>
                <LogOut className="mr-2 h-4 w-4" />
                Revoke All Sessions
             </Button>
