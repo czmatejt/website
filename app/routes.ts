@@ -11,8 +11,7 @@ export default [
   // 2. AUTH (mydomain.cz/auth)
   route("auth/*", "routes/auth.tsx"),
 
-  // 3. THE "IS" PRIVATE APP (mydomain.cz/is/...)
-  // We use "prefix" to put everything inside /is/ without creating a folder named "is"
+  // 3. IN-SYSTEM (mydomain.cz/is/...)
   ...prefix("is", [
      layout("routes/is/is-layout.tsx", [
 
@@ -29,12 +28,16 @@ export default [
           route("security", "modules/account/routes/security.tsx"), // /is/account
         ]),
 
-        // Trainer Module
-        // TODO
+        ...prefix("trainer", [
+          layout("modules/trainer/routes/trainer-layout.tsx", [
+          index("modules/trainer/routes/trainer-redirect.tsx"), // /is/trainer
+          
+          route("overview", "modules/trainer/routes/overview.tsx"), // /is/trainer
+          route("attendance", "modules/trainer/routes/attendance.tsx"), // /is/trainer
+        ])]),
     
         
-        // This becomes /is/trainer/roster
-        //route("trainer/roster", "routes/trainer/roster.tsx"),
+        //route("trainer/overview", "routes/trainer/overview.tsx"),
      ]),
   ]),
 

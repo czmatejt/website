@@ -81,8 +81,9 @@ export default function General() {
           </div>
 
         </CardContent>
-        <CardFooter className="border-t px-6 py-4 bg-muted/50">
-           <Button>Save Changes</Button>
+        <CardFooter className="border-t px-6 py-4 bg-muted/50" >
+           <Button disabled>Save Changes</Button>
+           {/* disabled for now until backend is ready TODO*/}
         </CardFooter>
       </Card>
     </div>

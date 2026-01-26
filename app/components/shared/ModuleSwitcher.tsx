@@ -165,10 +165,10 @@ export function ModuleSwitcher({ userRoles }: { userRoles: string[] }) {
               navigate("/is/account/general");
             }}
             className={cn(
-                "gap-2 text-sm transition-all",
+                "gap-2 text-sm hover:text-foreground transition-all",
                 activeModule?.id === "account" 
                     ? "bg-slate-100 font-semibold text-slate-900 shadow-sm" 
-                    : "text-slate-500 hover:text-slate-900"
+                    : "text-slate-500"
             )}
         >
             <User className={cn("h-4 w-4", activeModule?.id === "account" ? "text-blue-600" : "text-slate-400")} />

@@ -9,8 +9,8 @@ export type ModuleNavigation = {
 
 export const MODULE_NAVIGATIONS: Record<string, ModuleNavigation[]> = {
     trainer: [
-        { title: "Dashboard", href: "/is/trainer/dashboard", icon: LayoutDashboard },
-        { title: "Roster", href: "/is/trainer/roster", icon: Users },
+        //{ title: "Dashboard", href: "/is/trainer/dashboard", icon: LayoutDashboard },
+        { title: "Overview", href: "/is/trainer/overview", icon: Users },
         { title: "Attendance", href: "/is/trainer/attendance", icon: ClipboardList },
     ],
     athlete: [
