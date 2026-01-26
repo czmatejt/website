@@ -134,4 +134,19 @@ body {
   body {
     @apply bg-background text-foreground;
   }
+
+  /* Force pointer cursor on all buttons and clickable roles */
+  button, 
+  [role="button"],
+  [type="button"],
+  [type="submit"],
+  [type="reset"] {
+    cursor: pointer;
+  }
+
+  /* But keep the 'not-allowed' cursor for disabled buttons */
+  button:disabled,
+  [role="button"][aria-disabled="true"] {
+    cursor: not-allowed;
+  }
 }
