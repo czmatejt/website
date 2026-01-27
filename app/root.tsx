@@ -14,6 +14,8 @@ import { SuperTokensWrapper } from "supertokens-auth-react";
 import { initSuperTokens } from "./config/supertokens"; 
 import { ThemeProvider } from "./components/shared/theme-provider";
 
+import "./i18n";
+
 // 1. Initialize immediately
 initSuperTokens();
 

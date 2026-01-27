@@ -5,8 +5,11 @@ import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Alert, AlertDescription } from "~/components/ui/alert";
 import { Loader2 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export function LoginForm() {
+  const { t } = useTranslation();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -57,7 +60,7 @@ export function LoginForm() {
           )}
 
           <div className="grid gap-2">
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email">{t("auth.email_label")}</Label>
             <Input
               id="email"
               placeholder="coach@example.com"
@@ -72,7 +75,7 @@ export function LoginForm() {
           </div>
           
           <div className="grid gap-2">
-            <Label htmlFor="password">Password</Label>
+            <Label htmlFor="password">{t("auth.password_label")}</Label>
             <Input
               id="password"
               type="password"
@@ -85,7 +88,7 @@ export function LoginForm() {
 
           <Button disabled={isLoading}>
             {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            Sign In with Email
+            {t("auth.sign_in_btn")}
           </Button>
         </div>
       </form>

@@ -11,8 +11,11 @@ import {
   CardTitle,
 } from "~/components/ui/card";
 import { Loader2 } from "lucide-react";
+import { useTranslation } from "react-i18next";
+import { LanguageToggle } from "~/components/shared/language-toggle";
 
 export default function LoginPage() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [checkingSession, setCheckingSession] = useState(true);
 
@@ -41,7 +44,10 @@ export default function LoginPage() {
       
       {/* 1. Theme Toggle (Top Right) */}
       <div className="absolute right-4 top-4 md:right-8 md:top-8">
-        <ModeToggle />
+        <div className="flex gap-2">
+          <LanguageToggle />
+          <ModeToggle />
+        </div>
       </div>
 
       {/* 2. Main Content Card */}
@@ -58,9 +64,9 @@ export default function LoginPage() {
         {/* The Card */}
         <Card className="shadow-lg">
           <CardHeader className="space-y-1 text-center">
-            <CardTitle className="text-2xl">Welcome back</CardTitle>
+            <CardTitle className="text-2xl">{t("auth.welcome_back")}</CardTitle>
             <CardDescription>
-              Enter your email to sign in to your account
+              {t("auth.login_subtitle")}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -74,7 +80,7 @@ export default function LoginPage() {
             href="/auth/reset-password" 
             className="underline underline-offset-4 hover:text-primary"
           >
-            Forgot your password?
+            {t("auth.forgot_password")}
           </a>
         </div>
         
