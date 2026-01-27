@@ -9,9 +9,11 @@ export default [
   route("", "routes/home-redirect.tsx"),
 
   // 2. AUTH (mydomain.cz/auth)
-  route("auth/", "modules/auth/routes/login.tsx"),
-  //route("auth/*", "routes/auth.tsx"),
-
+  route("auth/", "modules/auth/routes/auth-redirect.tsx"),
+  route("auth/login", "modules/auth/routes/login.tsx"),
+  route("auth/signup", "modules/auth/routes/signup.tsx"),
+  route("auth/reset-password", "modules/auth/routes/reset-password.tsx"),
+  
   // 3. IN-SYSTEM (mydomain.cz/is/...)
   ...prefix("is", [
      layout("routes/is/is-layout.tsx", [

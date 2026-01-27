@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router"; // Import Link
-import { useTranslation } from "react-i18next"; // Import Translation Hook
+import { useTranslation } from "react-i18next";
 import { doesSessionExist } from "supertokens-auth-react/recipe/session";
-import { LoginForm } from "~/modules/auth/components/login-form";
+import { SignUpForm } from "~/modules/auth/components/signup-form";
 import { ModeToggle } from "~/components/shared/mode-toggle";
 import { LanguageToggle } from "~/components/shared/language-toggle"; // Don't forget this!
 import {
@@ -11,12 +11,11 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-  CardFooter, // Import CardFooter
 } from "~/components/ui/card";
 import { Loader2 } from "lucide-react";
 
-export default function LoginPage() {
-  const { t } = useTranslation(); // Use the hook
+export default function SignUpPage() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [checkingSession, setCheckingSession] = useState(true);
 
@@ -43,7 +42,6 @@ export default function LoginPage() {
   return (
     <div className="relative flex min-h-screen w-full flex-col items-center justify-center bg-muted/40 p-4">
       
-      {/* Top Right Controls */}
       <div className="absolute right-4 top-4 flex items-center gap-2 md:right-8 md:top-8">
         <LanguageToggle />
         <ModeToggle />
@@ -53,41 +51,32 @@ export default function LoginPage() {
         
         {/* Branding */}
         <div className="flex flex-col items-center gap-2 text-center">
+           {/* <img src="/logo.webp" className="h-10 w-10" /> */}
           <div className="flex items-center gap-2 font-bold text-2xl text-primary">
             TrackMeet
           </div>
         </div>
 
-        {/* The Card */}
+        {/* Card */}
         <Card className="shadow-lg">
           <CardHeader className="space-y-1 text-center">
-            <CardTitle className="text-2xl">{t("auth.welcome_back")}</CardTitle>
+            <CardTitle className="text-2xl">{t("auth.create_account")}</CardTitle>
             <CardDescription>
-              {t("auth.login_subtitle")}
+              {t("auth.signup_subtitle")}
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <LoginForm />
+            <SignUpForm />
           </CardContent>
-          
-          {/* FORGOT PASSWORD (Inside Card) */}
-          <CardFooter className="flex justify-center border-t p-4">
-             <Link 
-              to="/auth/reset-password" 
-              className="text-sm text-muted-foreground hover:text-primary hover:underline"
-            >
-              {t("auth.forgot_password")}
-            </Link>
-          </CardFooter>
         </Card>
 
-        {/* SIGN UP LINK (Outside Card) */}
+        {/* Footer Link */}
         <div className="text-center text-sm text-muted-foreground">
           <Link 
-            to="/auth/signup" 
+            to="/auth/login" 
             className="underline underline-offset-4 hover:text-primary"
           >
-            {t("auth.dont_have_account")}
+            {t("auth.already_have_account")}
           </Link>
         </div>
         

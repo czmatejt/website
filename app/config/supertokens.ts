@@ -43,6 +43,9 @@ export const initSuperTokens = () => {
             };
           },
         },
+        resetPasswordUsingTokenFeature: {
+          disableDefaultUI: true,
+        },
       }),
       Session.init(),
     ],

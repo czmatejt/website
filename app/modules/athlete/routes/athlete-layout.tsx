@@ -1,5 +1,5 @@
 import { Outlet } from "react-router";
-import { RoleGuard } from "~/components/auth/role-guard";
+import { RoleGuard } from "~/modules/auth/components/role-guard";
 
 export default function AthleteLayout() {
   return (
