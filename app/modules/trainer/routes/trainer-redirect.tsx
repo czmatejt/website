@@ -6,7 +6,7 @@ export default function TrainerRedirect() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    navigate("/is/trainer/overview", { replace: true });
+    navigate("/is/trainer/dashboard", { replace: true });
   }, [navigate]);
 
   return null;

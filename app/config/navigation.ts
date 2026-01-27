@@ -25,7 +25,7 @@ export const APP_MODULES: AppModule[] = [
   { 
     id: "trainer", 
     label: "Trainer", 
-    path: "/is/trainer/overview", 
+    path: "/is/trainer/dashboard", 
     icon: Users,
     description: "Manage overview and plans."
   },

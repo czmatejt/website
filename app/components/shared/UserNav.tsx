@@ -116,7 +116,7 @@ export function UserNav() {
         <DropdownMenuSeparator />
         
         <DropdownMenuGroup>
-          <DropdownMenuItem className="cursor-pointer" onClick={() => navigate("/is/account")}>
+          <DropdownMenuItem className="cursor-pointer" onClick={() => navigate("/is/account/general")}>
             <User className="mr-2 h-4 w-4" />
             <span>Account</span>
           </DropdownMenuItem>
@@ -124,6 +124,11 @@ export function UserNav() {
             <Settings className="mr-2 h-4 w-4" />
             <span>Settings</span>
           </DropdownMenuItem> */}
+        </DropdownMenuGroup>
+
+        <DropdownMenuSeparator className="md:hidden" />
+
+        <DropdownMenuGroup>
 
           {/* --- THEME TOGGLE ITEM --- */}
           <DropdownMenuItem 
