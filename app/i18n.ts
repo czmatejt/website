@@ -38,6 +38,9 @@ const resources = {
         light: "Light",
         dark: "Dark",
         system: "System",
+      },
+      language: {
+        toggle: "Toggle language",
       }
     }
   },
@@ -71,10 +74,13 @@ const resources = {
         back_to_login: "Zpět na přihlášení",
       },
       theme: {
-        toggle: "Přepnout téma",
-        light: "Světlé",
-        dark: "Tmavé",
+        toggle: "Přepnout motiv",
+        light: "Světlý",
+        dark: "Tmavý",
         system: "Systém",
+      },
+      language: {
+        toggle: "Přepnout jazyk",
       }
     }
   }

@@ -54,7 +54,7 @@ export default function LoginPage() {
         {/* Branding */}
         <div className="flex flex-col items-center gap-2 text-center">
           <div className="flex items-center gap-2 font-bold text-2xl text-primary">
-            TrackMeet
+            KLUBIS
           </div>
         </div>
 

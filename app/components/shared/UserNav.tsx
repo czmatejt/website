@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { 
   LogOut, 
   User, 
@@ -30,6 +31,8 @@ import { useTheme } from "~/components/shared/theme-provider";
 import { Navigate, useNavigate } from "react-router";
 
 export function UserNav() {
+  const { i18n } = useTranslation();
+  const { t } = useTranslation();
   const session = useSessionContext();
   const { theme, setTheme } = useTheme();
   const navigate = useNavigate();
@@ -57,6 +60,12 @@ export function UserNav() {
       fetchProfile();
     }
   }, [session.loading]);
+
+  const toggleLang = () => {
+    const currentLang = i18n.language;
+    const newLang = currentLang.startsWith("en") ? "cs" : "en";
+    i18n.changeLanguage(newLang);
+  };
 
   const handleLogout = async () => {
     await signOut();
@@ -122,11 +131,23 @@ export function UserNav() {
             onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
           >
             {theme !== "dark" ? (
-               <Sun className="mr-2 h-4 w-4" />
+              <Sun className="mr-2 h-4 w-4" />
             ) : (
-               <Moon className="mr-2 h-4 w-4" />
+              <Moon className="mr-2 h-4 w-4" />
             )}
-            <span>Toggle Theme</span>
+            <span>{t("theme.toggle")}</span>
+          </DropdownMenuItem>
+          {/* Toggle language */}
+          <DropdownMenuItem
+            className="cursor-pointer md:hidden"
+            onClick={() => {
+              toggleLang();
+            }}
+          >
+            <span className="mr-2 h-4 w-4 flex items-center justify-center">
+              {i18n.language.startsWith("en") ? "🇨🇿" : "🇬🇧"}
+            </span>
+            <span>{t("language.toggle")}</span>
           </DropdownMenuItem>
           {/* ------------------------- */}
 

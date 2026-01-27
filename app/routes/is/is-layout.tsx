@@ -11,6 +11,7 @@ import { AppSidebar } from "~/components/shared/AppSidebar";
 import { useSessionContext } from "supertokens-auth-react/recipe/session";
 import { ModeToggle } from "~/components/shared/mode-toggle";
 import logo from "~/assets/images/akkurim-logo.webp";
+import { LanguageToggle } from "~/components/shared/language-toggle";
 
 
 export default function ISLayout() {
@@ -96,7 +97,10 @@ export default function ISLayout() {
         <div className="flex items-center gap-2">
           <UserNav />
           <div className="hidden md:block">
-            <ModeToggle />
+            <div className="flex items-center gap-2">
+              <LanguageToggle />
+              <ModeToggle />
+            </div>
           </div>
         </div>
 
