@@ -2,7 +2,7 @@ import { Outlet, useLocation } from "react-router";
 import { SessionAuth } from "supertokens-auth-react/recipe/session";
 
 import { useEffect, useState } from "react";
-import { Activity, List, Menu } from "lucide-react";
+import { Activity, List, Loader2, Menu } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "~/components/ui/sheet";
 import { ModuleSwitcher } from "~/components/shared/ModuleSwitcher";
@@ -17,7 +17,11 @@ export default function ISLayout() {
   const session = useSessionContext();
   // remove role- prefix from roles
   if (session.loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex min-h-screen w-full items-center justify-center bg-muted/40">
+        <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+      </div>
+    );
   }
   const userRoles = session.accessTokenPayload["st-role"]?.["v"].map((r: string) => r.replace("role-", "")) || [];
 

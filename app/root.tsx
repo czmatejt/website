@@ -17,6 +17,27 @@ import { ThemeProvider } from "./components/shared/theme-provider";
 // 1. Initialize immediately
 initSuperTokens();
 
+const themeScript = `
+  (function() {
+    try {
+      const storageKey = "vite-ui-theme"; 
+      const theme = localStorage.getItem(storageKey);
+      const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      
+      const isDark = theme === 'dark' || (!theme && systemDark);
+      
+      if (isDark) {
+        document.documentElement.classList.add('dark');
+        // Force the background color immediately to prevent white flash
+        document.documentElement.style.backgroundColor = "#020817"; // Tailwind slate-950
+      } else {
+        document.documentElement.classList.remove('dark');
+        document.documentElement.style.backgroundColor = "#ffffff";
+      }
+    } catch (e) {}
+  })();
+`;
+
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
   {
@@ -32,12 +53,14 @@ export const links: Route.LinksFunction = () => [
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <Meta />
         <Links />
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+
       </head>
       <body>
         <ThemeProvider>
