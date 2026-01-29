@@ -13,8 +13,10 @@ import "./app.css";
 import { SuperTokensWrapper } from "supertokens-auth-react";
 import { initSuperTokens } from "./config/supertokens"; 
 import { ThemeProvider } from "./components/shared/theme-provider";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import "./i18n";
+import { useState } from "react";
 
 // 1. Initialize immediately
 initSuperTokens();
@@ -54,6 +56,15 @@ export const links: Route.LinksFunction = () => [
 ];
 
 export function Layout({ children }: { children: React.ReactNode }) {
+  const [queryClient] = useState(() => new QueryClient({
+    defaultOptions: {
+      queries: {
+        // Optional: Global config to prevent aggressive refetching
+        staleTime: 60 * 1000, 
+      },
+    },
+  }));
+
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
@@ -67,8 +78,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <body>
         <ThemeProvider>
           <SuperTokensWrapper>
+            <QueryClientProvider client={queryClient}>
             {children}
-            </SuperTokensWrapper>
+            </QueryClientProvider>
+          </SuperTokensWrapper>
+          
         </ThemeProvider>
         <ScrollRestoration />
         <Scripts />
