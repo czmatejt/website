@@ -5,6 +5,7 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useLocation,
 } from "react-router";
 
 import type { Route } from "./+types/root";
@@ -14,6 +15,8 @@ import { SuperTokensWrapper } from "supertokens-auth-react";
 import { initSuperTokens } from "./config/supertokens"; 
 import { ThemeProvider } from "./components/shared/theme-provider";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { PrivateNotFound } from "./components/shared/not-found-private";
+import { PublicNotFound } from "./components/shared/not-found-public";
 
 import "./i18n";
 import { useState } from "react";
@@ -82,7 +85,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
             {children}
             </QueryClientProvider>
           </SuperTokensWrapper>
-          
+
         </ThemeProvider>
         <ScrollRestoration />
         <Scripts />
@@ -96,30 +99,32 @@ export default function App() {
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
-  let message = "Oops!";
-  let details = "An unexpected error occurred.";
-  let stack: string | undefined;
+  const location = useLocation();
+  
+  const isPrivateZone = location.pathname.startsWith("/is");
 
-  if (isRouteErrorResponse(error)) {
-    message = error.status === 404 ? "404" : "Error";
-    details =
-      error.status === 404
-        ? "The requested page could not be found."
-        : error.statusText || details;
-  } else if (import.meta.env.DEV && error && error instanceof Error) {
-    details = error.message;
-    stack = error.stack;
+  // 1. Handle 404s
+  if (isRouteErrorResponse(error) && error.status === 404) {
+    return (
+      <Layout>
+        {isPrivateZone ? <PrivateNotFound /> : <PublicNotFound />}
+      </Layout>
+    );
   }
 
+  // 2. Handle generic crashes (500s)
+  // You can also split this if you want a technical error page for admins
+  // vs a generic "Whoops" for public users.
   return (
-    <main className="pt-16 p-4 container mx-auto">
-      <h1>{message}</h1>
-      <p>{details}</p>
-      {stack && (
-        <pre className="w-full p-4 overflow-x-auto">
-          <code>{stack}</code>
-        </pre>
-      )}
-    </main>
+    <Layout>
+      <div className="flex h-screen flex-col items-center justify-center gap-4 text-center">
+        <h1 className="text-4xl font-bold">Something went wrong</h1>
+        <p className="text-muted-foreground">
+          {isPrivateZone 
+            ? (error instanceof Error ? error.message : "Unknown App Error") 
+            : "We are having trouble loading this page."}
+        </p>
+      </div>
+    </Layout>
   );
 }

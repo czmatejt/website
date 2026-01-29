@@ -12,6 +12,7 @@ import { useSessionContext } from "supertokens-auth-react/recipe/session";
 import { ModeToggle } from "~/components/shared/mode-toggle";
 import logo from "~/assets/images/akkurim-logo.webp";
 import { LanguageToggle } from "~/components/shared/language-toggle";
+import { PrivateFooter } from "~/components/shared/footer-private";
 
 
 export default function ISLayout() {
@@ -115,6 +116,9 @@ export default function ISLayout() {
         <main className="flex-1 overflow-y-auto p-4 md:p-8">
           <Outlet />
         </main>
+      </div>
+      <div className="mt-auto border-t"> 
+        <PrivateFooter />
       </div>
     </div>
     </SessionAuth>
