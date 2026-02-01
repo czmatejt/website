@@ -45,9 +45,10 @@ export default function SecurityPage() {
     try {
       // We will create this endpoint in the next step
       // sent the json data in snake_case format
-      await apiClient("/user/change-password", {
-        method: "POST",
-        body: JSON.stringify({ old_password: oldPassword, new_password: newPassword, confirm_new_password: confirmPassword }),
+      await apiClient.post("/user/change-password", {
+        old_password: oldPassword,
+        new_password: newPassword,
+        confirm_new_password: confirmPassword
       });
 
       setStatus({ type: "success", message: "Password updated successfully." });
@@ -64,7 +65,7 @@ export default function SecurityPage() {
     if (!confirm("Are you sure? You will be logged out of this device too.")) return;
     
     try {
-      await apiClient("/user/revoke-all-sessions", { method: "POST" });
+      await apiClient.post("/user/revoke-all-sessions");
       await signOut(); // Clear frontend cookies
       window.location.href = "/auth";
     } catch (error) {

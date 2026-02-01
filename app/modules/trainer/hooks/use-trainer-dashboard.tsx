@@ -7,7 +7,7 @@ export function useTrainerSchedule() {
     queryKey: ["trainer", "schedule"],
     queryFn: async () => {
       // apiClient.get returns the parsed JSON automatically (usually)
-      return await apiClient<DashboardTraining[]>("/v1/trainer/dashboard/schedule");
+      return await apiClient.get<DashboardTraining[]>("/v1/trainer/dashboard/schedule");
     },
     // Refresh data every 5 minutes automatically
     refetchInterval: 1000 * 60 * 5, 

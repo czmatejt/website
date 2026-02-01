@@ -36,7 +36,7 @@ export default [
           index("modules/trainer/routes/trainer-redirect.tsx"), // /is/trainer
           
           route("dashboard", "modules/trainer/routes/dashboard.tsx"), // /is/trainer
-          route("attendance", "modules/trainer/routes/attendance.tsx"), // /is/trainer
+          route("attendance", "modules/trainer/routes/attendance/index.tsx"), // /is/trainer
         ])]),
     
         

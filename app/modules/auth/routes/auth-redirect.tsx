@@ -5,7 +5,7 @@ import { doesSessionExist } from "supertokens-auth-react/recipe/session";
 
 export default function AuthRedirect() {
   const navigate = useNavigate();
-  const location = useLocation(); // <--- 2. Get current URL info
+  const location = useLocation();
   const [checkingSession, setCheckingSession] = useState(true);
   
     useEffect(() => {
