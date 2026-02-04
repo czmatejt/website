@@ -12,7 +12,7 @@ import { toast } from "sonner";
 import { cn } from "~/lib/utils";
 
 // --- Types ---
-type AttendanceStatus = 'p' | 'a' | 'e' | string | null; 
+type AttendanceStatus = 'p' | 'a' | 'e' | string | ''; 
 
 interface PersonItem {
   id: string; // Generic ID (athlete_id or trainer_id)
@@ -79,12 +79,12 @@ export default function TakeAttendancePage() {
       
       // Initialize Athletes (Default to null/unmarked if backend sends nothing)
       const aStatus: Record<string, AttendanceStatus> = {};
-      data.athletes.forEach(a => aStatus[a.athlete_id] = a.presence || null);
+      data.athletes.forEach(a => aStatus[a.athlete_id] = a.presence || '');
       setAthleteStatus(aStatus);
 
       // Initialize Trainers
       const tStatus: Record<string, AttendanceStatus> = {};
-      data.trainers.forEach(t => tStatus[t.trainer_id] = t.presence || null);
+      data.trainers.forEach(t => tStatus[t.trainer_id] = t.presence || '');
       setTrainerStatus(tStatus);
     }
   }, [data]);
@@ -92,22 +92,22 @@ export default function TakeAttendancePage() {
   // --- Logic: Cycle Status ---
   // Flow: Unmarked -> Present -> Absent -> Excused -> Unmarked
   const cycleStatus = (current: AttendanceStatus): AttendanceStatus => {
-    if (!current) return 'p';       // Null -> Present
+    if (current === '') return 'p';       // Unmarked -> Present
     if (current === 'p') return 'a'; // Present -> Absent
     if (current === 'a') return 'e'; // Absent -> Excused
-    if (current === 'e') return null; // Excused -> Unmarked (Reset)
+    if (current === 'e') return ''; // Excused -> Unmarked (Reset)
     return 'p'; // Fallback for custom strings -> Present
   };
 
   const updateStatus = (type: 'athlete' | 'trainer', id: string) => {
     if (type === 'athlete') {
-      setAthleteStatus(prev => ({ ...prev, [id]: cycleStatus(prev[id] || null) }));
+      setAthleteStatus(prev => ({ ...prev, [id]: cycleStatus(prev[id] || '') }));
     } else {
-      setTrainerStatus(prev => ({ ...prev, [id]: cycleStatus(prev[id] || null) }));
+      setTrainerStatus(prev => ({ ...prev, [id]: cycleStatus(prev[id] || '') }));
     }
   };
 
-  const markAll = (type: 'athlete' | 'trainer', status: 'p' | null) => {
+  const markAll = (type: 'athlete' | 'trainer', status: 'p' | '') => {
     if (type === 'athlete') {
       const newSt = { ...athleteStatus };
       data?.athletes.forEach(a => newSt[a.athlete_id] = status);
@@ -215,7 +215,7 @@ export default function TakeAttendancePage() {
               variant="link" 
               size="sm" 
               className="h-auto p-0 text-primary"
-              onClick={() => markAll('athlete', isAllAthletesMarked ? null : 'p')}
+              onClick={() => markAll('athlete', isAllAthletesMarked ? '' : 'p')}
             >
               {isAllAthletesMarked ? t.status.unmark_all : t.status.mark_all}
             </Button>
