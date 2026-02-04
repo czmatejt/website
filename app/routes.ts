@@ -37,6 +37,7 @@ export default [
           
           route("dashboard", "modules/trainer/routes/dashboard.tsx"), // /is/trainer
           route("attendance", "modules/trainer/routes/attendance/index.tsx"), // /is/trainer
+          route("attendance/:id", "modules/trainer/routes/attendance/$id.tsx"), // /is/trainer
         ])]),
     
         

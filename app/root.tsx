@@ -17,6 +17,7 @@ import { ThemeProvider } from "./components/shared/theme-provider";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { PrivateNotFound } from "./components/shared/not-found-private";
 import { PublicNotFound } from "./components/shared/not-found-public";
+import { Toaster } from "sonner";
 
 import "./i18n";
 import { useState } from "react";
@@ -82,7 +83,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <ThemeProvider>
           <SuperTokensWrapper>
             <QueryClientProvider client={queryClient}>
-            {children}
+              <Toaster position="top-right" />
+              {children}
             </QueryClientProvider>
           </SuperTokensWrapper>
 
