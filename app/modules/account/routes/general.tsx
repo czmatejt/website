@@ -28,17 +28,19 @@ import { Label } from "~/components/ui/label";
 import { Separator } from "~/components/ui/separator";
 import { useEffect, useState } from "react";
 import { useUser } from "~/modules/shared/hooks/use-user";
+import { useTranslation } from "react-i18next";
 
 
 export default function General() {
+  const { t } = useTranslation();
   const { user, isLoading } = useUser();
 
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="text-lg font-medium">Profile</h3>
+        <h3 className="text-lg font-medium">{t("account.profile")}</h3>
         <p className="text-sm text-muted-foreground">
-          This is how others will see you on the site.
+          {t("account.profile_description")}
         </p>
       </div>
       <Separator />
@@ -55,26 +57,26 @@ export default function General() {
           
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div className="space-y-2">
-              <Label htmlFor="firstName">First name</Label>
-              <Input id="firstName" placeholder="Enter your first name" defaultValue={user?.first_name || ""} />
+              <Label htmlFor="firstName">{t("account.first_name")}</Label>
+              <Input id="firstName" placeholder={t("account.enter", { field: t("account.first_name") })} disabled defaultValue={user?.first_name || ""} />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="lastName">Last name</Label>
-              <Input id="lastName" placeholder="Enter your last name" defaultValue={user?.last_name || ""} />
+              <Label htmlFor="lastName">{t("account.last_name")}</Label>
+              <Input id="lastName" placeholder={t("account.enter", { field: t("account.last_name") })} disabled defaultValue={user?.last_name || ""} />
             </div>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email">{t("account.email")}</Label>
             <Input id="email" disabled defaultValue={user?.email || ""} />
-            <p className="text-[0.8rem] text-muted-foreground">
+            {/* <p className="text-[0.8rem] text-muted-foreground">
               Contact your administrator to change your email.
-            </p>
+            </p> */}
           </div>
 
         </CardContent>
         <CardFooter className="border-t px-6 py-4 bg-muted/50" >
-           <Button disabled>Save Changes</Button>
+           <Button disabled>{t("buttons.save")}</Button>
            {/* disabled for now until backend is ready TODO*/}
         </CardFooter>
       </Card>

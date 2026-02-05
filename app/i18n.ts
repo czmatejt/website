@@ -1,6 +1,7 @@
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
+import { email } from "zod";
 
 // 1. Define your translations here (or import from .json files later)
 const resources = {
@@ -43,7 +44,21 @@ const resources = {
         toggle: "Toggle language",
       },
       portal: {
-        welcome: "Welcome to KLUBIS\n(Beta version)",
+        welcome: "Welcome to KLUBIS\n(Beta)",
+      },
+      account: {
+        profile: "Profile",
+        profile_description: "This is how others will see you on the site.",
+        first_name: "First Name",
+        last_name: "Last Name",
+        email: "Email",
+        enter: "Enter your {{field}}",
+        security: {
+          change_password: "Change Password",
+        }
+      },
+      buttons: {
+        save: "Save Changes",
       }
     }
   },
@@ -86,7 +101,18 @@ const resources = {
         toggle: "Přepnout jazyk",
       },
       portal: {
-        welcome: "Vítejte v KLUBISu\n(Beta verze)",
+        welcome: "Vítejte v KLUBISu\n(Beta)",
+      },
+      account: {
+        profile: "Profil",
+        profile_description: "Takto vás uvidí ostatní na webu.",
+        first_name: "Jméno",
+        last_name: "Příjmení",
+        email: "Email",
+        enter: "Zadejte své {{field}}"
+      },
+      buttons: {
+        save: "Uložit změny",
       }
     }
   }

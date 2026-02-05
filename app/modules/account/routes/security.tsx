@@ -1,11 +1,5 @@
 import { useState } from "react";
-import { 
-  ShieldAlert, 
-  LogOut, 
-  Loader2, 
-  CheckCircle2,
-  AlertCircle 
-} from "lucide-react";
+import { ShieldAlert, LogOut, Loader2 } from "lucide-react";
 import { apiClient } from "~/lib/api-client";
 import { Button } from "~/components/ui/button";
 import {
@@ -19,17 +13,15 @@ import {
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Separator } from "~/components/ui/separator";
-import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
+import { toast } from "sonner";
 import { signOut } from "supertokens-auth-react/recipe/emailpassword";
 
 export default function SecurityPage() {
   const [isLoading, setIsLoading] = useState(false);
-  const [status, setStatus] = useState<{ type: 'success' | 'error', message: string } | null>(null);
 
   async function handlePasswordChange(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setIsLoading(true);
-    setStatus(null);
 
     const formData = new FormData(event.currentTarget);
     const oldPassword = formData.get("old_password") as string;
@@ -37,7 +29,7 @@ export default function SecurityPage() {
     const confirmPassword = formData.get("confirm_password") as string;
 
     if (newPassword !== confirmPassword) {
-      setStatus({ type: "error", message: "New passwords do not match." });
+      toast.error("New passwords do not match.", { duration: 4000 , style: { background: "red", color: "white" } });
       setIsLoading(false);
       return;
     }
@@ -51,11 +43,11 @@ export default function SecurityPage() {
         confirm_new_password: confirmPassword
       });
 
-      setStatus({ type: "success", message: "Password updated successfully." });
+      toast.success("Password updated successfully.", { duration: 4000, style: { background: "green", color: "white" } });
       (event.target as HTMLFormElement).reset();
     } catch (error: any) {
       // If the API returns a neat error (like "Wrong old password"), show it
-      setStatus({ type: "error", message: error.message || "Failed to update password." });
+      toast.error(error?.message || "Failed to update password.", { duration: 4000, style: { background: "red", color: "white" } });
     } finally {
       setIsLoading(false);
     }
@@ -66,10 +58,11 @@ export default function SecurityPage() {
     
     try {
       await apiClient.post("/user/revoke-all-sessions");
+      toast.success("All sessions revoked. Signing out...", { duration: 4000, style: { background: "yellow", color: "black" } });
       await signOut(); // Clear frontend cookies
       window.location.href = "/auth";
-    } catch (error) {
-      alert("Failed to revoke sessions.");
+    } catch (error: any) {
+      toast.error(error?.message || "Failed to revoke sessions.", { duration: 4000, style: { background: "red", color: "white" } });
     }
   }
 
@@ -94,13 +87,7 @@ export default function SecurityPage() {
         <form onSubmit={handlePasswordChange}>
           <CardContent className="space-y-4">
             
-            {status && (
-              <Alert variant={status.type === "error" ? "destructive" : "default"} className={status.type === "success" ? "border-green-500 text-green-600" : ""}>
-                 {status.type === "error" ? <AlertCircle className="h-4 w-4"/> : <CheckCircle2 className="h-4 w-4"/>}
-                 <AlertTitle>{status.type === "error" ? "Error" : "Success"}</AlertTitle>
-                 <AlertDescription>{status.message}</AlertDescription>
-              </Alert>
-            )}
+            {/* Notifications shown via sonner toasts */}
 
             <div className="space-y-2">
               <Label htmlFor="current">Current Password</Label>
