@@ -3,8 +3,8 @@ import { useNavigate, Link } from "react-router"; // Import Link
 import { useTranslation } from "react-i18next";
 import { doesSessionExist } from "supertokens-auth-react/recipe/session";
 import { SignUpForm } from "~/modules/auth/components/signup-form";
-import { ModeToggle } from "~/components/shared/mode-toggle";
-import { LanguageToggle } from "~/components/shared/language-toggle"; // Don't forget this!
+import { ModeToggle } from "~/modules/shared/components/mode-toggle";
+import { LanguageToggle } from "~/modules/shared/components/language-toggle"; // Don't forget this!
 import {
   Card,
   CardContent,

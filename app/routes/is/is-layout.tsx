@@ -5,14 +5,14 @@ import { useEffect, useState } from "react";
 import { Activity, List, Loader2, Menu } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "~/components/ui/sheet";
-import { ModuleSwitcher } from "~/components/shared/ModuleSwitcher";
-import { UserNav } from "~/components/shared/UserNav"; // Your existing User Pill
-import { AppSidebar } from "~/components/shared/AppSidebar";
+import { ModuleSwitcher } from "~/modules/shared/components/ModuleSwitcher";
+import { UserNav } from "~/modules/shared/components/UserNav"; // Your existing User Pill
+import { AppSidebar } from "~/modules/shared/components/AppSidebar";
 import { useSessionContext } from "supertokens-auth-react/recipe/session";
-import { ModeToggle } from "~/components/shared/mode-toggle";
+import { ModeToggle } from "~/modules/shared/components/mode-toggle";
 import logo from "~/assets/images/akkurim-logo.webp";
-import { LanguageToggle } from "~/components/shared/language-toggle";
-import { PrivateFooter } from "~/components/shared/footer-private";
+import { LanguageToggle } from "~/modules/shared/components/language-toggle";
+import { PrivateFooter } from "~/modules/shared/components/footer-private";
 
 
 export default function ISLayout() {

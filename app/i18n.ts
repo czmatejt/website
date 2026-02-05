@@ -41,6 +41,9 @@ const resources = {
       },
       language: {
         toggle: "Toggle language",
+      },
+      portal: {
+        welcome: "Welcome to KLUBIS\n(Beta version)",
       }
     }
   },
@@ -81,6 +84,9 @@ const resources = {
       },
       language: {
         toggle: "Přepnout jazyk",
+      },
+      portal: {
+        welcome: "Vítejte v KLUBISu\n(Beta verze)",
       }
     }
   }

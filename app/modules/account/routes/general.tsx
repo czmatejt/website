@@ -26,20 +26,12 @@ import {
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Separator } from "~/components/ui/separator";
-import { type UserProfile, UserService } from "~/services/user";
 import { useEffect, useState } from "react";
+import { useUser } from "~/modules/shared/hooks/use-user";
 
 
 export default function General() {
-  const [user, setUser] = useState<UserProfile | null>(null);
-
-  useEffect(() => {
-    async function fetchUser() {
-      const userData = await UserService.getProfile();
-      setUser(userData);
-    }
-    fetchUser();
-  }, []);
+  const { user, isLoading } = useUser();
 
   return (
     <div className="space-y-6">

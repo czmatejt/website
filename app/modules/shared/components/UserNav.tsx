@@ -26,9 +26,9 @@ import {
 } from "~/components/ui/dropdown-menu";
 import { signOut } from "supertokens-auth-react/recipe/emailpassword";
 import { useSessionContext } from "supertokens-auth-react/recipe/session";
-import { UserService } from "~/services/user"; 
-import { useTheme } from "~/components/shared/theme-provider";
+import { useTheme } from "~/modules/shared/components/theme-provider";
 import { Navigate, useNavigate } from "react-router";
+import { useUser } from "~/modules/shared/hooks/use-user";
 
 export function UserNav() {
   const { i18n } = useTranslation();
@@ -36,30 +36,7 @@ export function UserNav() {
   const session = useSessionContext();
   const { theme, setTheme } = useTheme();
   const navigate = useNavigate();
-  const [userName, setUserName] = useState<string | null>(null);
-  const [userEmail, setUserEmail] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  // 1. Fetch User Name on Mount
-  useEffect(() => {
-    async function fetchProfile() {
-      try {
-        const profile = await UserService.getProfile();
-        setUserName(profile?.full_name || "User ?");
-        setUserEmail(profile?.email || null);
-      } catch (error) {
-        console.error("Failed to fetch profile", error);
-        setUserName("User ?");
-        setUserEmail(null);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    if (!session.loading) {
-      fetchProfile();
-    }
-  }, [session.loading]);
+  const { user, isLoading: userLoading } = useUser();
 
   const toggleLang = () => {
     const currentLang = i18n.language;
@@ -88,13 +65,13 @@ export function UserNav() {
         <Button variant="outline" className="relative h-10 w-auto gap-2 rounded-full pl-4 pr-2 hover:bg-slate-100">
           {/* CHANGE 2: Display Name (Hidden on very small phones if needed, or always show) */}
           <span className="hidden text-sm font-medium md:inline-block">
-            {loading ? "Loading..." : userName}
+            {userLoading ? "Loading..." : user?.full_name}
           </span>
           {/* CHANGE 3: The Avatar is now smaller and sits inside the button */}
           <Avatar className="h-7 w-7 border border-slate-200">
-            <AvatarImage src="" alt={userName || "User"} />
+            <AvatarImage src="" alt={user?.full_name || "User"} />
             <AvatarFallback className="bg-slate-200 text-xs text-slate-700">
-               {loading ? "..." : getInitials(userName || "U?")}
+               {userLoading ? "..." : getInitials(user?.full_name || "U?")}
             </AvatarFallback>
           </Avatar>
           {/* Optional: Add a tiny chevron to indicate it's a menu */}
@@ -105,11 +82,11 @@ export function UserNav() {
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
             <p className="text-sm font-medium leading-none">
-              {loading ? "Loading..." : userName}
+              {userLoading ? "Loading..." : user?.full_name}
             </p>
             <p className="text-xs leading-none text-muted-foreground">
               {/* Show the user ID or email from session payload if available */}
-              {!session.loading && userEmail}
+              {!session.loading && user?.email ? user.email : "No email"}
             </p>
           </div>
         </DropdownMenuLabel>

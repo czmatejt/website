@@ -13,10 +13,10 @@ import "./app.css";
 
 import { SuperTokensWrapper } from "supertokens-auth-react";
 import { initSuperTokens } from "./config/supertokens"; 
-import { ThemeProvider } from "./components/shared/theme-provider";
+import { ThemeProvider } from "./modules/shared/components/theme-provider";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { PrivateNotFound } from "./components/shared/not-found-private";
-import { PublicNotFound } from "./components/shared/not-found-public";
+import { PrivateNotFound } from "./modules/shared/components/not-found-private";
+import { PublicNotFound } from "./modules/shared/components/not-found-public";
 import { Toaster } from "sonner";
 
 import "./i18n";

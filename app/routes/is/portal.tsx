@@ -1,8 +1,13 @@
+import { useTranslation } from "react-i18next";
+
 // Conceptual Layout for your Portal
 export default function Portal() {
+  const { t } = useTranslation();
+
+
   return (
     <div className="min-h-screen bg-muted/40 p-4 md:p-8">      
-      <h1 className="text-3xl font-bold text-foreground">Welcome to the IS Portal (TODO)</h1>
+      <h1 className="text-3xl font-bold text-foreground">{t("portal.welcome")}</h1>
     </div>
     // <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
       

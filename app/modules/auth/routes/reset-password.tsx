@@ -1,8 +1,8 @@
 import { Link, useSearchParams } from "react-router";
 import { useTranslation } from "react-i18next";
 import { ResetPasswordForm } from "~/modules/auth/components/reset-password-form";
-import { ModeToggle } from "~/components/shared/mode-toggle";
-import { LanguageToggle } from "~/components/shared/language-toggle";
+import { ModeToggle } from "~/modules/shared/components/mode-toggle";
+import { LanguageToggle } from "~/modules/shared/components/language-toggle";
 import {
   Card,
   CardContent,
