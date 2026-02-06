@@ -54,7 +54,24 @@ const resources = {
         email: "Email",
         enter: "Enter your {{field}}",
         security: {
+          title: "Security",
+          description: "Manage your password and account security.",
           change_password: "Change Password",
+          ensure_long_password: "Ensure your account is using a long, random password to stay secure.",
+          current_password_label: "Current Password",
+          new_password_label: "New Password",
+          confirm_password_label: "Confirm Password",
+          update_password_btn: "Update Password",
+          session_management_title: "Session Management",
+          session_management_desc: "If you suspect your account was compromised, you can log out of all devices immediately.",
+          logout_all_devices_prompt: "Log out of all devices?",
+          revoke_sessions_btn: "Revoke All Sessions",
+          confirm_revoke_prompt: "Are you sure? You will be logged out of this device too.",
+          passwords_no_match_toast: "New passwords do not match.",
+          password_update_success_toast: "Password updated successfully.",
+          password_update_failed_toast: "Failed to update password.",
+          sessions_revoked_success_toast: "All sessions revoked. Signing out...",
+          sessions_revoked_failed_toast: "Failed to revoke sessions."
         }
       },
       buttons: {
@@ -110,6 +127,27 @@ const resources = {
         last_name: "Příjmení",
         email: "Email",
         enter: "Zadejte své {{field}}"
+        ,
+        security: {
+          title: "Zabezpečení",
+          description: "Spravujte své bezpečnostní nastavení.",
+          change_password: "Změna hesla",
+          ensure_long_password: "Ujistěte se, že vaše heslo je dostatečně dlouhé.",
+          current_password_label: "Aktuální heslo",
+          new_password_label: "Nové heslo",
+          confirm_password_label: "Potvrzení hesla",
+          update_password_btn: "Změnit heslo",
+          session_management_title: "Správa přihlášení",
+          session_management_desc: "Pokud máte podezření, že váš účet byl kompromitován, můžete se okamžitě odhlásit ze všech zařízení.",
+          logout_all_devices_prompt: "Odhlásit se ze všech zařízení?",
+          revoke_sessions_btn: "Odhlásit se ze všech zařízení",
+          confirm_revoke_prompt: "Opravdu se chcete odhlásit ze všech zařízení? Budete odhlášeni i z tohoto zařízení.",
+          passwords_no_match_toast: "Hesla se neshodují",
+          password_update_success_toast: "Heslo bylo úspěšně změněno",
+          password_update_failed_toast: "Nepodařilo se změnit heslo",
+          sessions_revoked_success_toast: "Odhlášení ze všech zařízení proběhlo úspěšně. Probíhá odhlašování...",
+          sessions_revoked_failed_toast: "Nepodařilo se odhlásit ze všech zařízení"
+        }
       },
       buttons: {
         save: "Uložit změny",

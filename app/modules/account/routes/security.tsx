@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { ShieldAlert, LogOut, Loader2 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { apiClient } from "~/lib/api-client";
 import { Button } from "~/components/ui/button";
 import {
@@ -17,6 +18,7 @@ import { toast } from "sonner";
 import { signOut } from "supertokens-auth-react/recipe/emailpassword";
 
 export default function SecurityPage() {
+  const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
 
   async function handlePasswordChange(event: React.FormEvent<HTMLFormElement>) {
@@ -29,7 +31,7 @@ export default function SecurityPage() {
     const confirmPassword = formData.get("confirm_password") as string;
 
     if (newPassword !== confirmPassword) {
-      toast.error("New passwords do not match.", { duration: 4000 , style: { background: "red", color: "white" } });
+      toast.error(t("account.security.passwords_no_match_toast"), { duration: 4000 , style: { background: "red", color: "white" } });
       setIsLoading(false);
       return;
     }
@@ -43,35 +45,35 @@ export default function SecurityPage() {
         confirm_new_password: confirmPassword
       });
 
-      toast.success("Password updated successfully.", { duration: 4000, style: { background: "green", color: "white" } });
+      toast.success(t("account.security.password_update_success_toast"), { duration: 4000, style: { background: "green", color: "white" } });
       (event.target as HTMLFormElement).reset();
     } catch (error: any) {
       // If the API returns a neat error (like "Wrong old password"), show it
-      toast.error(error?.message || "Failed to update password.", { duration: 4000, style: { background: "red", color: "white" } });
+      toast.error(error?.message || t("account.security.password_update_failed_toast"), { duration: 4000, style: { background: "red", color: "white" } });
     } finally {
       setIsLoading(false);
     }
   }
 
   async function handleRevokeSessions() {
-    if (!confirm("Are you sure? You will be logged out of this device too.")) return;
+    if (!confirm(t("account.security.confirm_revoke_prompt"))) return;
     
     try {
       await apiClient.post("/user/revoke-all-sessions");
-      toast.success("All sessions revoked. Signing out...", { duration: 4000, style: { background: "yellow", color: "black" } });
+      toast.success(t("account.security.sessions_revoked_success_toast"), { duration: 4000, style: { background: "yellow", color: "black" } });
       await signOut(); // Clear frontend cookies
       window.location.href = "/auth";
     } catch (error: any) {
-      toast.error(error?.message || "Failed to revoke sessions.", { duration: 4000, style: { background: "red", color: "white" } });
+      toast.error(error?.message || t("account.security.sessions_revoked_failed_toast"), { duration: 4000, style: { background: "red", color: "white" } });
     }
   }
 
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="text-lg font-medium">Security</h3>
+        <h3 className="text-lg font-medium">{t("account.security.title")}</h3>
         <p className="text-sm text-muted-foreground">
-          Manage your password and account security.
+          {t("account.security.description")}
         </p>
       </div>
       <Separator />
@@ -79,9 +81,9 @@ export default function SecurityPage() {
       {/* --- PASSWORD CHANGE CARD --- */}
       <Card>
         <CardHeader>
-          <CardTitle>Change Password</CardTitle>
+          <CardTitle>{t("account.security.change_password")}</CardTitle>
           <CardDescription>
-            Ensure your account is using a long, random password to stay secure.
+            {t("account.security.ensure_long_password")}
           </CardDescription>
         </CardHeader>
         <form onSubmit={handlePasswordChange}>
@@ -90,17 +92,17 @@ export default function SecurityPage() {
             {/* Notifications shown via sonner toasts */}
 
             <div className="space-y-2">
-              <Label htmlFor="current">Current Password</Label>
+              <Label htmlFor="current">{t("account.security.current_password_label")}</Label>
               <Input id="current" name="old_password" type="password" required />
             </div>
             
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               <div className="space-y-2">
-                <Label htmlFor="new">New Password</Label>
+                <Label htmlFor="new">{t("account.security.new_password_label")}</Label>
                 <Input id="new" name="new_password" type="password" required />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="confirm">Confirm Password</Label>
+                <Label htmlFor="confirm">{t("account.security.confirm_password_label")}</Label>
                 <Input id="confirm" name="confirm_password" type="password" required />
               </div>
             </div>
@@ -108,7 +110,7 @@ export default function SecurityPage() {
           <CardFooter className="border-t px-6 py-0 my-4">
             <Button type="submit" disabled={isLoading}>
               {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Update Password
+              {t("account.security.update_password_btn")}
             </Button>
           </CardFooter>
         </form>
@@ -118,19 +120,19 @@ export default function SecurityPage() {
       <Card className="border-red-200">
         <CardHeader>
           <CardTitle className="text-red-600 flex items-center gap-2">
-             <ShieldAlert className="h-5 w-5"/> Session Management
+            <ShieldAlert className="h-5 w-5"/> {t("account.security.session_management_title")}
           </CardTitle>
           <CardDescription>
-            If you suspect your account was compromised, you can log out of all devices immediately.
+            {t("account.security.session_management_desc")}
           </CardDescription>
         </CardHeader>
         <CardFooter className="bg-red-50/50 px-6 py-4 flex justify-between items-center">
             <span className="text-sm text-red-800 font-medium">
-                Log out of all devices?
+              {t("account.security.logout_all_devices_prompt")}
             </span>
             <Button className="hover:text-red-900" variant="destructive" size="sm" onClick={handleRevokeSessions}>
-               <LogOut className="mr-2 h-4 w-4" />
-               Revoke All Sessions
+              <LogOut className="mr-2 h-4 w-4" />
+              {t("account.security.revoke_sessions_btn")}
             </Button>
         </CardFooter>
       </Card>
