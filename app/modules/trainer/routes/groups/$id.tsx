@@ -283,7 +283,7 @@ export default function ManageGroupPage() {
                           <Input
                             type="number"
                             className="pl-9 bg-background w-full"
-                            value={typeof field.value === 'number' ? field.value : field.value || ""}
+                            value={typeof field.value === 'number' ? field.value : ""}
                             onChange={(e) => {
                               const val = e.target.value;
                               field.onChange(val === "" ? "" : Number(val) || val);
