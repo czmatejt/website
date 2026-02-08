@@ -2,8 +2,10 @@ import { useTrainerSchedule } from "./../hooks/use-trainer-dashboard";
 import { TrainingCard } from "~/modules/trainer/components/training-card"; // Import the new component
 import { Skeleton } from "~/components/ui/skeleton";
 import { Activity } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export default function TrainerDashboard() {
+  const { t } = useTranslation();
   const { data: trainings, isLoading } = useTrainerSchedule();
 
   if (isLoading) {
@@ -16,7 +18,7 @@ export default function TrainerDashboard() {
       {/* SECTION 1: Training Schedule */}
       <section>
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-2xl font-bold tracking-tight">Your Schedule</h2>
+          <h2 className="text-2xl font-bold tracking-tight">{t("trainer.dashboard.your_schedule")}</h2>
         </div>
         
         {!trainings?.length ? (
@@ -34,14 +36,14 @@ export default function TrainerDashboard() {
       <div className="grid gap-6 md:grid-cols-2">
         {/* Next Meet Widget will go here */}
         <div className="rounded-xl border bg-card text-card-foreground shadow-sm p-6">
-           <h3 className="font-semibold mb-2">Next Meet</h3>
-           <p className="text-sm text-muted-foreground">No meets scheduled soon.</p>
+           <h3 className="font-semibold mb-2">{t("trainer.dashboard.next_meet")}</h3>
+           <p className="text-sm text-muted-foreground">{t("trainer.dashboard.no_meets_scheduled_soon")}</p>
         </div>
 
         {/* Quick Actions Widget will go here */}
         <div className="rounded-xl border bg-card text-card-foreground shadow-sm p-6">
-           <h3 className="font-semibold mb-2">Quick Actions</h3>
-           <p className="text-sm text-muted-foreground">Add Member, Import Results...</p>
+           <h3 className="font-semibold mb-2">{t("trainer.dashboard.quick_actions")}</h3>
+           <p className="text-sm text-muted-foreground">{t("trainer.dashboard.add_member_import_results")}</p>
         </div>
       </div>
 
@@ -50,14 +52,15 @@ export default function TrainerDashboard() {
 }
 
 function EmptyState() {
+  const { t } = useTranslation();
   return (
     <div className="flex h-[300px] flex-col items-center justify-center rounded-lg border border-dashed p-8 text-center bg-muted/20">
       <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-secondary">
         <Activity className="h-6 w-6 text-muted-foreground" />
       </div>
-      <h3 className="mt-4 text-lg font-semibold">No upcoming trainings</h3>
+      <h3 className="mt-4 text-lg font-semibold">{t("trainer.dashboard.no_upcoming_trainings")}</h3>
       <p className="mb-4 text-sm text-muted-foreground">
-        You don't have any sessions scheduled for the next 7 days.
+        {t("trainer.dashboard.no_sessions_scheduled_desc")}
       </p>
     </div>
   );

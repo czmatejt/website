@@ -83,6 +83,14 @@ export class ApiClient {
   post<T>(endpoint: string, body?: any, options?: RequestOptions) {
     return this.request<T>("POST", endpoint, body, options);
   }
+
+  put<T>(endpoint: string, body?: any, options?: RequestOptions) {
+    return this.request<T>("PUT", endpoint, body, options);
+  }
+
+  delete<T>(endpoint: string, body?: any, options?: RequestOptions) {
+    return this.request<T>("DELETE", endpoint, body, options);
+  }
 }
 
 const defaultClient = new ApiClient();

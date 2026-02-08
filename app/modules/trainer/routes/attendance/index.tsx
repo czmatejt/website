@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { format, startOfMonth, endOfMonth, isSameDay, parseISO, isToday } from "date-fns";
+import { useTranslation } from "react-i18next";
 import { Calendar } from "~/components/ui/calendar";
 import { Button } from "~/components/ui/button";
 import { Plus, RefreshCw, Calendar as CalendarIcon } from "lucide-react"; // Renamed icon
@@ -11,6 +12,7 @@ import { Badge } from "~/components/ui/badge";
 import { cn } from "~/lib/utils";
 
 export default function AttendanceOverview() {
+  const { t } = useTranslation();
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [viewedMonth, setViewedMonth] = useState<Date>(new Date());
   
@@ -40,8 +42,8 @@ export default function AttendanceOverview() {
       {/* 1. Mobile-First Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Attendance</h1>
-          <p className="text-sm text-muted-foreground">Select a date to verify athletes.</p>
+          <h1 className="text-2xl font-bold tracking-tight">{t("trainer.attendance.attendance_title")}</h1>
+          <p className="text-sm text-muted-foreground">{t("trainer.attendance.select_date_verify_athletes")}</p>
         </div>
         {/* Quick 'Today' Action for Mobile */}
         <Button 
@@ -104,7 +106,7 @@ export default function AttendanceOverview() {
             <div>
               <h2 className="text-xl px-4 font-semibold flex items-center gap-2">
                 {date ? format(date, "EEEE, MMM do") : "Select a Date"}
-                {date && isToday(date) && <Badge variant="secondary">Today</Badge>}
+                {date && isToday(date) && <Badge variant="secondary">{t("trainer.attendance.today")}</Badge>}
               </h2>
             </div>
           </div>
@@ -125,15 +127,29 @@ export default function AttendanceOverview() {
 }
 
 function EmptyState({ date }: { date?: Date }) {
+
+  const { t } = useTranslation();
+
   return (
+
     <div className="flex flex-col items-center justify-center py-12 text-center text-muted-foreground border-2 border-dashed rounded-xl bg-muted/10">
+
       <div className="bg-background rounded-full p-3 mb-3 shadow-sm">
+
         <CalendarIcon className="h-6 w-6 opacity-40" />
+
       </div>
-      <p className="font-medium">No sessions found</p>
+
+      <p className="font-medium">{t("trainer.attendance.no_sessions_found")}</p>
+
       <p className="text-sm max-w-[200px] mx-auto">
-        There are no trainings scheduled for {date ? format(date, "MMMM do") : "this day"}.
+
+        {t("shared.no_trainings_scheduled_for_day", { day: date ? format(date, "MMMM do") : t("shared.this_day") })}
+
       </p>
+
     </div>
+
   );
+
 }

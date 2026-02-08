@@ -53,6 +53,7 @@ const resources = {
         last_name: "Last Name",
         email: "Email",
         enter: "Enter your {{field}}",
+        personal_information: "Personal Information",
         security: {
           title: "Security",
           description: "Manage your password and account security.",
@@ -76,6 +77,56 @@ const resources = {
       },
       buttons: {
         save: "Save Changes",
+      },
+      trainer: {
+        verified: "(Verified)",
+        cancelled: "Cancelled",
+        finished: "Finished",
+        dashboard: {
+          your_schedule: "Your Schedule",
+          next_meet: "Next Meet",
+          no_meets_scheduled_soon: "No meets scheduled soon.",
+          quick_actions: "Quick Actions",
+          add_member_import_results: "Add Member, Import Results...",
+          no_upcoming_trainings: "No upcoming trainings"
+        },
+        attendance: {
+          attendance_title: "Attendance",
+          select_date_verify_athletes: "Select a date to verify athletes.",
+          today: "Today",
+          no_sessions_found: "No sessions found",
+          abbreviation_e: "E"
+        },
+        group: {
+          loading: "Loading...",
+          basic_information: "Basic Information",
+          group_name: "Group Name",
+          training_day: "Training Day",
+          school_year: "School Year",
+          schedule_settings: "Schedule Settings",
+          start_time: "Start Time",
+          duration_min: "Duration (min)"
+        }
+      },
+      shared: {
+        account: "Account",
+        settings: "Settings",
+        logout: "Log out",
+        product: "Product",
+        features: "Features",
+        pricing: "Pricing",
+        login: "Login",
+        support: "Support",
+        help_center: "Help Center",
+        privacy_policy: "Privacy Policy",
+        terms_of_service: "Terms of Service",
+        follow_us: "Follow Us",
+        no_module_found: "No module found.",
+        page_not_found: "Page not found",
+        go_home: "Go Home",
+        report_a_bug: "Report a Bug",
+        loading_session: "Loading session...",
+        access_denied: "Access Denied"
       }
     }
   },

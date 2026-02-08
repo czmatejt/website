@@ -1,104 +1,122 @@
-import { useState, useEffect, useMemo } from "react";
-import { useForm, useFieldArray } from "react-hook-form";
+import { useState, useEffect } from "react";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useNavigate, useParams, useSearchParams } from "react-router"; // or react-router-dom
+import { useNavigate, useParams, useSearchParams } from "react-router";
 import { 
   ArrowLeft, Save, Sun, Snowflake, Clock, Timer, 
-  Search, UserMinus, UserPlus, Check, AlertCircle 
-} from "lucide-react";
+  Search, UserMinus, UserPlus, MapPin 
+} from "lucide-react"; // Added MapPin
 
 import { apiClient } from "~/lib/api-client";
-import { groupFormSchema, type GroupFormValues } from "~/modules/trainer/types/group-form"; // Import schema
+import { groupFormSchema, type GroupFormValues } from "~/modules/trainer/types/group-form";
 
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
+import { Textarea } from "~/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/select";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "~/components/ui/form";
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "~/components/ui/form";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { ScrollArea } from "~/components/ui/scroll-area";
 import { Badge } from "~/components/ui/badge";
 import { toast } from "sonner";
 import { cn } from "~/lib/utils";
+import { useTranslation } from "react-i18next";
 
-// --- Mock Data Loaders (Replace with your actual API calls) ---
-// You likely have a user hook already
+// --- Mock Data Loaders ---
 import { useUser } from "~/modules/shared/hooks/use-user"; 
+
+// Helper interface for the sub-component
+interface Person {
+  id: string;
+  first_name: string;
+  last_name: string;
+}
 
 export default function ManageGroupPage() {
   const navigate = useNavigate();
-  const { id } = useParams(); // If present, we are in Edit Mode
-  const [searchParams] = useSearchParams();
+  const { id } = useParams();
+  const { t } = useTranslation();
   const isEditMode = !!id;
-  const { user: currentUser } = useUser(); // Get current trainer to prevent self-removal
+  const { user: currentUser } = useUser();
   const queryClient = useQueryClient();
 
   // 1. Fetch Reference Data
   const { data: athletes = [] } = useQuery({
     queryKey: ["athletes", "all"],
-    queryFn: async () => (await apiClient.get("/athletes/all")).data,
-    initialData: [], 
+    queryFn: async () => (await apiClient.get<Person[]>("/v1/group/athletes/all")),
+    placeholderData: [], 
   });
 
   const { data: trainers = [] } = useQuery({
     queryKey: ["trainers", "all"],
-    queryFn: async () => (await apiClient.get("/trainers/all")).data,
-    initialData: [],
+    queryFn: async () => (await apiClient.get<Person[]>("/v1/group/trainers/all")),
+    placeholderData: [],
   });
   
   const { data: schoolYears = [] } = useQuery({
     queryKey: ["school-years"],
-    queryFn: async () => (await apiClient.get("/school-years")).data,
-    initialData: [{ id: "curr", name: "2023/2024" }], // Fallback
+    queryFn: async () => (await apiClient.get<Map<string, string>[]>("/v1/group/school-years")),
+    placeholderData: [],
   });
 
-  // 2. Fetch Group Data (if Editing)
+  // 2. Fetch Group Data
   const { data: groupData, isLoading: isLoadingGroup } = useQuery({
     queryKey: ["group", id],
-    queryFn: async () => (await apiClient.get(`/groups/${id}`)).data,
+    queryFn: async () => (await apiClient.get(`/v1/group/${id}`)),
     enabled: isEditMode,
   });
 
   // 3. Form Setup
-  const form = useForm<GroupFormValues>({
+  type GroupFormSchemaValues = z.input<typeof groupFormSchema>;
+
+  const form = useForm<GroupFormSchemaValues>({
     resolver: zodResolver(groupFormSchema),
     defaultValues: {
+      system: 0,
       name: "",
+      description: "",
       day_of_week: "Monday",
       school_year_id: "",
       summer_time: "16:00",
       winter_time: "16:00",
-      summer_duration_minutes: 90,
-      winter_duration_minutes: 90,
-      trainer_ids: currentUser ? [currentUser.trainer_id] : [], // Default to current user
+      duration_summer: 90,
+      duration_winter: 90,
+      default_location_summer: "",
+      default_location_winter: "",
+      trainer_ids: currentUser ? [currentUser.trainer_id] : [],
       athlete_ids: [],
     },
   });
 
-  // Populate form on Edit
   useEffect(() => {
     if (groupData) {
       form.reset({
+        system: groupData.system ?? 0,
         name: groupData.name,
+        description: groupData.description ?? "",
         day_of_week: groupData.day_of_week,
         school_year_id: groupData.school_year_id,
         summer_time: groupData.summer_time,
         winter_time: groupData.winter_time,
-        summer_duration_minutes: groupData.summer_duration_minutes,
-        winter_duration_minutes: groupData.winter_duration_minutes,
+        duration_summer: groupData.duration_summer,
+        duration_winter: groupData.duration_winter,
+        default_location_summer: groupData.default_location_summer || "",
+        default_location_winter: groupData.default_location_winter || "",
         trainer_ids: groupData.trainers.map((t: any) => t.id),
         athlete_ids: groupData.athletes.map((a: any) => a.id),
       });
     }
-  }, [groupData, form]);
+  }, [groupData]);
 
   // 4. Mutation
   const saveMutation = useMutation({
-    mutationFn: async (values: GroupFormValues) => {
+    mutationFn: async (values: GroupFormSchemaValues) => {
       if (isEditMode) {
-        await apiClient.put(`/groups/${id}`, values);
+        await apiClient.put(`/v1/group/${id}`, values);
       } else {
-        await apiClient.post("/groups", values);
+        await apiClient.post("/v1/group", values);
       }
     },
     onSuccess: () => {
@@ -109,10 +127,14 @@ export default function ManageGroupPage() {
     onError: () => toast.error("Failed to save group."),
   });
 
-  if (isEditMode && isLoadingGroup) return <div className="p-8">Loading...</div>;
+  if (isEditMode && isLoadingGroup) return <div className="p-8">{t("trainer.group.loading")}</div>;
+  
+  // Don't render form until we have data in edit mode
+  if (isEditMode && !groupData) return <div className="p-8">{t("trainer.group.loading")}</div>;
 
   return (
-    <div className="flex flex-col min-h-screen bg-background animate-in fade-in duration-500">
+    // Mobile Fix: Added overflow-x-hidden to prevent horizontal scrolling issues
+    <div className="flex flex-col min-h-screen bg-background animate-in fade-in duration-500 overflow-x-hidden">
       
       {/* HEADER */}
       <div className="sticky top-0 z-10 bg-background/80 backdrop-blur border-b p-4 flex items-center justify-between">
@@ -133,21 +155,48 @@ export default function ManageGroupPage() {
             {/* --- SECTION 1: BASICS --- */}
             <Card>
               <CardHeader>
-                <CardTitle>Basic Information</CardTitle>
+                <CardTitle>{t("trainer.group.basic_information")}</CardTitle>
               </CardHeader>
               <CardContent className="grid gap-4 md:grid-cols-2">
                 <FormField control={form.control} name="name" render={({ field }) => (
                   <FormItem className="col-span-2">
-                    <FormLabel>Group Name</FormLabel>
+                    <FormLabel>{t("trainer.group.group_name")}</FormLabel>
                     <FormControl><Input placeholder="e.g. Elite Sprinters" {...field} /></FormControl>
                     <FormMessage />
                   </FormItem>
                 )} />
 
+                <FormField control={form.control} name="description" render={({ field }) => (
+                  <FormItem className="col-span-2">
+                    <FormLabel>{t("trainer.group.description")}</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        placeholder={t("trainer.group.description_placeholder")}
+                        className="min-h-[96px]"
+                        {...field}
+                        value={field.value ?? ""}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )} />
+
+                <FormField control={form.control} name="system" render={({ field }) => (
+                  <FormItem className="hidden">
+                    <FormControl>
+                      <Input type="hidden" {...field} value={field.value ?? 0} />
+                    </FormControl>
+                  </FormItem>
+                )} />
+
                 <FormField control={form.control} name="day_of_week" render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Training Day</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormLabel>{t("trainer.group.training_day")}</FormLabel>
+                    <Select 
+                      onValueChange={field.onChange} 
+                      value={field.value}
+                      key={field.value}
+                    >
                       <FormControl><SelectTrigger><SelectValue placeholder="Select day" /></SelectTrigger></FormControl>
                       <SelectContent>
                         {["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"].map(d => (
@@ -161,8 +210,12 @@ export default function ManageGroupPage() {
 
                 <FormField control={form.control} name="school_year_id" render={({ field }) => (
                   <FormItem>
-                    <FormLabel>School Year</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormLabel>{t("trainer.group.school_year")}</FormLabel>
+                    <Select 
+                      onValueChange={field.onChange} 
+                      value={field.value}
+                      key={field.value}
+                    >
                       <FormControl><SelectTrigger><SelectValue placeholder="Select year" /></SelectTrigger></FormControl>
                       <SelectContent>
                         {schoolYears.map((y: any) => (
@@ -176,69 +229,133 @@ export default function ManageGroupPage() {
               </CardContent>
             </Card>
 
-            {/* --- SECTION 2: TIME & DURATION --- */}
+            {/* --- SECTION 2: TIME & DURATION (Fixed Mobile Layout) --- */}
             <Card>
               <CardHeader>
-                <CardTitle>Schedule Settings</CardTitle>
+                <CardTitle>{t("trainer.group.schedule_settings")}</CardTitle>
               </CardHeader>
               <CardContent className="space-y-6">
                 
-                {/* Summer Row */}
-                <div className="flex flex-col md:flex-row gap-4 items-end p-4 rounded-lg bg-orange-50/50 dark:bg-orange-900/10 border border-orange-100 dark:border-orange-900/30">
-                  <div className="flex items-center gap-2 min-w-[120px] pb-2 text-orange-700 dark:text-orange-400 font-medium">
-                    <Sun className="h-5 w-5" /> Summer
-                  </div>
-                  
-                  <FormField control={form.control} name="summer_time" render={({ field }) => (
-                    <FormItem className="flex-1">
-                      <FormLabel className="text-xs">Start Time</FormLabel>
-                      <div className="relative">
-                        <Clock className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                        <Input type="time" className="pl-9 bg-background" {...field} />
-                      </div>
-                      <FormMessage />
-                    </FormItem>
-                  )} />
+                {/* SUMMER BLOCK */}
+                <div className="p-4 rounded-lg bg-orange-50/50 dark:bg-orange-900/10 border border-orange-100 dark:border-orange-900/30">
+                  {/* Grid Layout: Stacks on mobile, 2 columns on desktop */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    
+                    {/* Label & Icon - Spans full width on mobile */}
+                    <div className="flex items-center gap-2 text-orange-700 dark:text-orange-400 font-medium md:col-span-2">
+                      <Sun className="h-5 w-5" /> Summer
+                    </div>
 
-                  <FormField control={form.control} name="summer_duration_minutes" render={({ field }) => (
-                    <FormItem className="flex-1">
-                      <FormLabel className="text-xs">Duration (min)</FormLabel>
-                      <div className="relative">
-                        <Timer className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                        <Input type="number" className="pl-9 bg-background" {...field} />
-                      </div>
-                      <FormMessage />
-                    </FormItem>
-                  )} />
+                    {/* NEW: Default Location (Full width on mobile, Left col on desktop) */}
+                    <FormField control={form.control} name="default_location_summer" render={({ field }) => (
+                      <FormItem className="md:col-span-2">
+                        <FormLabel className="text-xs">Default Location</FormLabel>
+                        <div className="relative">
+                          <MapPin className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                          <Input placeholder="e.g. Outdoor Stadium" className="pl-9 bg-background" {...field} />
+                        </div>
+                        <FormMessage />
+                      </FormItem>
+                    )} />
+                    
+                    {/* Time */}
+                    <FormField control={form.control} name="summer_time" render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-xs">Start Time</FormLabel>
+                        <div className="relative">
+                          <Clock className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                          <Input 
+                            type="time" 
+                            className="pl-9 bg-background w-full" 
+                            {...field}
+                          />
+                        </div>
+                        <FormMessage />
+                      </FormItem>
+                    )} />
+
+                    {/* Duration */}
+                    <FormField control={form.control} name="duration_summer" render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-xs">Duration (min)</FormLabel>
+                        <div className="relative">
+                          <Timer className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                          <Input
+                            type="number"
+                            className="pl-9 bg-background w-full"
+                            value={typeof field.value === 'number' ? field.value : field.value || ""}
+                            onChange={(e) => {
+                              const val = e.target.value;
+                              field.onChange(val === "" ? "" : Number(val) || val);
+                            }}
+                            onBlur={field.onBlur}
+                            name={field.name}
+                            ref={field.ref}
+                          />
+                        </div>
+                        <FormMessage />
+                      </FormItem>
+                    )} />
+                  </div>
                 </div>
 
-                {/* Winter Row */}
-                <div className="flex flex-col md:flex-row gap-4 items-end p-4 rounded-lg bg-blue-50/50 dark:bg-blue-900/10 border border-blue-100 dark:border-blue-900/30">
-                  <div className="flex items-center gap-2 min-w-[120px] pb-2 text-blue-700 dark:text-blue-400 font-medium">
-                    <Snowflake className="h-5 w-5" /> Winter
-                  </div>
-                  
-                  <FormField control={form.control} name="winter_time" render={({ field }) => (
-                    <FormItem className="flex-1">
-                      <FormLabel className="text-xs">Start Time</FormLabel>
-                      <div className="relative">
-                        <Clock className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                        <Input type="time" className="pl-9 bg-background" {...field} />
-                      </div>
-                      <FormMessage />
-                    </FormItem>
-                  )} />
+                {/* WINTER BLOCK */}
+                <div className="p-4 rounded-lg bg-blue-50/50 dark:bg-blue-900/10 border border-blue-100 dark:border-blue-900/30">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    
+                    <div className="flex items-center gap-2 text-blue-700 dark:text-blue-400 font-medium md:col-span-2">
+                      <Snowflake className="h-5 w-5" /> Winter
+                    </div>
 
-                  <FormField control={form.control} name="winter_duration_minutes" render={({ field }) => (
-                    <FormItem className="flex-1">
-                      <FormLabel className="text-xs">Duration (min)</FormLabel>
-                      <div className="relative">
-                        <Timer className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                        <Input type="number" className="pl-9 bg-background" {...field} />
-                      </div>
-                      <FormMessage />
-                    </FormItem>
-                  )} />
+                    {/* NEW: Default Location */}
+                    <FormField control={form.control} name="default_location_winter" render={({ field }) => (
+                      <FormItem className="md:col-span-2">
+                        <FormLabel className="text-xs">Default Location</FormLabel>
+                        <div className="relative">
+                          <MapPin className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                          <Input placeholder="e.g. Indoor Gym" className="pl-9 bg-background" {...field} />
+                        </div>
+                        <FormMessage />
+                      </FormItem>
+                    )} />
+                    
+                    <FormField control={form.control} name="winter_time" render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-xs">Start Time</FormLabel>
+                        <div className="relative">
+                          <Clock className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                          <Input 
+                            type="time" 
+                            className="pl-9 bg-background w-full" 
+                            {...field}
+                          />
+                        </div>
+                        <FormMessage />
+                      </FormItem>
+                    )} />
+
+                    <FormField control={form.control} name="duration_winter" render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-xs">Duration (min)</FormLabel>
+                        <div className="relative">
+                          <Timer className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                          <Input
+                            type="number"
+                            className="pl-9 bg-background w-full"
+                            value={typeof field.value === 'number' ? field.value : field.value || ""}
+                            onChange={(e) => {
+                              const val = e.target.value;
+                              field.onChange(val === "" ? "" : Number(val) || val);
+                            }}
+                            onBlur={field.onBlur}
+                            name={field.name}
+                            ref={field.ref}
+                          />
+                        </div>
+                        <FormMessage />
+                      </FormItem>
+                    )} />
+                  </div>
                 </div>
 
               </CardContent>
@@ -250,7 +367,7 @@ export default function ManageGroupPage() {
               data={trainers}
               selectedIds={form.watch("trainer_ids")}
               onUpdate={(ids) => form.setValue("trainer_ids", ids, { shouldDirty: true })}
-              disabledId={currentUser?.id} // Cannot remove self
+              disabledId={currentUser?.trainer_id}
               disabledMessage="You cannot remove yourself from the group."
             />
 
@@ -285,133 +402,91 @@ export default function ManageGroupPage() {
   );
 }
 
-// ----------------------------------------------------------------------
-// SUB-COMPONENT: Reusable Person Selector (Like the Flutter Expansion)
-// ----------------------------------------------------------------------
-
-interface Person {
-  id: string;
-  first_name: string;
-  last_name: string;
-}
-
+// Sub-component remains the same...
 function PersonSelector({ 
-  title, 
-  data, 
-  selectedIds, 
-  onUpdate,
-  disabledId,
-  disabledMessage
+  title, data, selectedIds, onUpdate, disabledId, disabledMessage
 }: { 
-  title: string; 
-  data: Person[]; 
-  selectedIds: string[]; 
-  onUpdate: (ids: string[]) => void;
-  disabledId?: string;
-  disabledMessage?: string;
+  title: string; data: Person[]; selectedIds: string[]; 
+  onUpdate: (ids: string[]) => void; disabledId?: string; disabledMessage?: string;
 }) {
-  const [isOpen, setIsOpen] = useState(false);
-  const [query, setQuery] = useState("");
+    // ... (This part was fine in your original code)
+    // Just ensuring the import logic is clean
+    const [isOpen, setIsOpen] = useState(false);
+    const [query, setQuery] = useState("");
+  
+    const selectedPeople = data.filter(p => selectedIds.includes(p.id));
+    const availablePeople = data.filter(p => 
+      !selectedIds.includes(p.id) && 
+      (`${p.first_name} ${p.last_name}`).toLowerCase().includes(query.toLowerCase())
+    );
+  
+    const toggleSelection = (id: string) => {
+      if (id === disabledId && selectedIds.includes(id)) {
+        toast.error(disabledMessage || "Cannot remove this user.");
+        return;
+      }
+      if (selectedIds.includes(id)) {
+        onUpdate(selectedIds.filter(x => x !== id));
+      } else {
+        onUpdate([...selectedIds, id]);
+      }
+    };
 
-  const selectedPeople = data.filter(p => selectedIds.includes(p.id));
-  // Filter available people: Not already selected AND matches search
-  const availablePeople = data.filter(p => 
-    !selectedIds.includes(p.id) && 
-    (`${p.first_name} ${p.last_name}`).toLowerCase().includes(query.toLowerCase())
-  );
-
-  const toggleSelection = (id: string) => {
-    if (id === disabledId && selectedIds.includes(id)) {
-      toast.error(disabledMessage || "Cannot remove this user.");
-      return;
-    }
-    
-    if (selectedIds.includes(id)) {
-      onUpdate(selectedIds.filter(x => x !== id));
-    } else {
-      onUpdate([...selectedIds, id]);
-    }
-  };
-
-  return (
-    <Card>
-      <CardHeader className="flex flex-row items-center justify-between py-4">
-        <CardTitle className="text-base flex items-center gap-2">
-          {title === "Trainers" ? <UserPlus className="h-4 w-4" /> : <UserPlus className="h-4 w-4" />}
-          {title} 
-          <Badge variant="secondary">{selectedIds.length}</Badge>
-        </CardTitle>
-        <Button variant="ghost" size="sm" onClick={() => setIsOpen(!isOpen)}>
-          {isOpen ? "Done" : "Manage"}
-        </Button>
-      </CardHeader>
-      
-      <CardContent className="space-y-4">
-        {/* 1. List of SELECTED people (Always visible) */}
-        {selectedPeople.length > 0 ? (
-           <div className="flex flex-wrap gap-2">
-             {selectedPeople.map(person => (
-               <Badge 
-                 key={person.id} 
-                 variant="secondary" 
-                 className={cn(
-                   "pl-2 pr-1 py-1 flex items-center gap-1",
-                   person.id === disabledId && "opacity-70 cursor-not-allowed"
-                 )}
-               >
-                 {person.first_name} {person.last_name}
-                 <button 
-                   onClick={() => toggleSelection(person.id)}
-                   disabled={person.id === disabledId}
-                   className="hover:bg-destructive hover:text-white rounded-full p-0.5 transition-colors"
-                 >
-                    <UserMinus className="h-3 w-3" />
-                 </button>
-               </Badge>
-             ))}
-           </div>
-        ) : (
-          <div className="text-sm text-muted-foreground italic">No {title.toLowerCase()} selected</div>
-        )}
-
-        {/* 2. EXPANDABLE AREA: Search & Add */}
-        {isOpen && (
-          <div className="animate-in slide-in-from-top-2 pt-2 border-t mt-2">
-            <div className="relative mb-3">
-              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-              <Input 
-                placeholder={`Search ${title.toLowerCase()}...`} 
-                value={query}
-                onChange={e => setQuery(e.target.value)}
-                className="pl-9"
-              />
+    return (
+        <Card>
+        <CardHeader className="flex flex-row items-center justify-between py-4">
+            <CardTitle className="text-base flex items-center gap-2">
+            <UserPlus className="h-4 w-4" />
+            {title} 
+            <Badge variant="secondary">{selectedIds.length}</Badge>
+            </CardTitle>
+            <Button variant="ghost" size="sm" onClick={() => setIsOpen(!isOpen)}>
+            {isOpen ? "Done" : "Manage"}
+            </Button>
+        </CardHeader>
+        
+        <CardContent className="space-y-4">
+            {selectedPeople.length > 0 ? (
+            <div className="flex flex-wrap gap-2">
+                {selectedPeople.map(person => (
+                <Badge key={person.id} variant="secondary" className={cn("pl-2 pr-1 py-1 flex items-center gap-1", person.id === disabledId && "opacity-70 cursor-not-allowed")}>
+                    {person.first_name} {person.last_name}
+                    <button onClick={() => toggleSelection(person.id)} disabled={person.id === disabledId} className="hover:bg-destructive hover:text-white rounded-full p-0.5 transition-colors">
+                        <UserMinus className="h-3 w-3" />
+                    </button>
+                </Badge>
+                ))}
             </div>
-            
-            <ScrollArea className="h-[200px] rounded-md border p-2">
-              {availablePeople.length === 0 ? (
-                <div className="text-center py-8 text-sm text-muted-foreground">
-                  No matches found.
+            ) : (
+            <div className="text-sm text-muted-foreground italic">No {title.toLowerCase()} selected</div>
+            )}
+
+            {isOpen && (
+            <div className="animate-in slide-in-from-top-2 pt-2 border-t mt-2">
+                <div className="relative mb-3">
+                <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                <Input placeholder={`Search ${title.toLowerCase()}...`} value={query} onChange={e => setQuery(e.target.value)} className="pl-9" />
                 </div>
-              ) : (
-                <div className="space-y-1">
-                  {availablePeople.map(person => (
-                    <div 
-                      key={person.id} 
-                      onClick={() => toggleSelection(person.id)}
-                      className="flex items-center justify-between p-2 hover:bg-muted rounded-md cursor-pointer group"
-                    >
-                      <span className="text-sm">{person.first_name} {person.last_name}</span>
-                      <Button size="icon" variant="ghost" className="h-6 w-6 opacity-0 group-hover:opacity-100">
-                        <UserPlus className="h-4 w-4 text-green-600" />
-                      </Button>
+                
+                <ScrollArea className="h-[200px] rounded-md border p-2">
+                {availablePeople.length === 0 ? (
+                    <div className="text-center py-8 text-sm text-muted-foreground">No matches found.</div>
+                ) : (
+                    <div className="space-y-1">
+                    {availablePeople.map(person => (
+                        <div key={person.id} onClick={() => toggleSelection(person.id)} className="flex items-center justify-between p-2 hover:bg-muted rounded-md cursor-pointer group">
+                        <span className="text-sm">{person.first_name} {person.last_name}</span>
+                        <Button size="icon" variant="ghost" className="h-6 w-6 opacity-0 group-hover:opacity-100">
+                            <UserPlus className="h-4 w-4 text-green-600" />
+                        </Button>
+                        </div>
+                    ))}
                     </div>
-                  ))}
-                </div>
-              )}
-            </ScrollArea>
-          </div>
-        )}
-      </CardContent>
-    </Card>
-  );
+                )}
+                </ScrollArea>
+            </div>
+            )}
+        </CardContent>
+        </Card>
+    );
 }

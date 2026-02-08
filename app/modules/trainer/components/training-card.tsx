@@ -1,5 +1,6 @@
 import { Link } from "react-router";
 import { format, isPast, parseISO, addMinutes, isWithinInterval, formatDistanceToNow } from "date-fns";
+import { useTranslation } from "react-i18next";
 import { 
   MapPin, 
   Users, 
@@ -23,6 +24,7 @@ interface TrainingCardProps {
 }
 
 export function TrainingCard({ training }: TrainingCardProps) {
+  const { t } = useTranslation();
   const startDate = parseISO(training.start_at);
   const endDate = addMinutes(startDate, training.duration_minutes);
   const now = new Date();
@@ -84,7 +86,7 @@ export function TrainingCard({ training }: TrainingCardProps) {
               <Users className="h-4 w-4" />
               <span>
                 {training.attendee_count} Athletes 
-                {isAttendanceTaken && <span className="ml-1 text-green-600 font-medium">(Verified)</span>}
+                {isAttendanceTaken && <span className="ml-1 text-green-600 font-medium">{t("trainer.verified")}</span>}
               </span>
             </div>
           </div>
@@ -124,7 +126,7 @@ function TimeStatusBadge({
   isCancelled: boolean; 
 }) {
   if (isCancelled) {
-    return <Badge variant="destructive">Cancelled</Badge>;
+    return <Badge variant="destructive">{t("trainer.cancelled")}</Badge>;
   }
 
   if (isOngoing) {
@@ -137,7 +139,7 @@ function TimeStatusBadge({
   }
 
   if (isFinished) {
-    return <Badge variant="outline" className="text-muted-foreground">Finished</Badge>;
+    return <Badge variant="outline" className="text-muted-foreground">{t("trainer.finished")}</Badge>;
   }
 
   // Logic for "In 30 minutes" vs "In 2 days"
