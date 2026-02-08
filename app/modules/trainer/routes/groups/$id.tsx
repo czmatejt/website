@@ -34,6 +34,23 @@ interface Person {
   last_name: string;
 }
 
+interface GroupData {
+  id: string;
+  system?: number;
+  name: string;
+  description?: string | null;
+  day_of_week: string;
+  school_year_id: string;
+  summer_time: string;
+  winter_time: string;
+  duration_summer: number;
+  duration_winter: number;
+  default_location_summer?: string | null;
+  default_location_winter?: string | null;
+  trainers: Array<{ id: string }>;
+  athletes: Array<{ id: string }>;
+}
+
 export default function ManageGroupPage() {
   const navigate = useNavigate();
   const { id } = useParams();
@@ -64,7 +81,7 @@ export default function ManageGroupPage() {
   // 2. Fetch Group Data
   const { data: groupData, isLoading: isLoadingGroup } = useQuery({
     queryKey: ["group", id],
-    queryFn: async () => (await apiClient.get(`/v1/group/${id}`)),
+    queryFn: async () => (await apiClient.get<GroupData>(`/v1/group/${id}`)),
     enabled: isEditMode,
   });
 
@@ -342,7 +359,7 @@ export default function ManageGroupPage() {
                           <Input
                             type="number"
                             className="pl-9 bg-background w-full"
-                            value={typeof field.value === 'number' ? field.value : field.value || ""}
+                            value={typeof field.value === "number" || typeof field.value === "string" ? field.value : ""}
                             onChange={(e) => {
                               const val = e.target.value;
                               field.onChange(val === "" ? "" : Number(val) || val);
@@ -440,7 +457,7 @@ function PersonSelector({
             {title} 
             <Badge variant="secondary">{selectedIds.length}</Badge>
             </CardTitle>
-            <Button variant="ghost" size="sm" onClick={() => setIsOpen(!isOpen)}>
+            <Button type="button" variant="ghost" size="sm" onClick={() => setIsOpen(!isOpen)}>
             {isOpen ? "Done" : "Manage"}
             </Button>
         </CardHeader>
@@ -449,12 +466,28 @@ function PersonSelector({
             {selectedPeople.length > 0 ? (
             <div className="flex flex-wrap gap-2">
                 {selectedPeople.map(person => (
-                <Badge key={person.id} variant="secondary" className={cn("pl-2 pr-1 py-1 flex items-center gap-1", person.id === disabledId && "opacity-70 cursor-not-allowed")}>
-                    {person.first_name} {person.last_name}
-                    <button onClick={() => toggleSelection(person.id)} disabled={person.id === disabledId} className="hover:bg-destructive hover:text-white rounded-full p-0.5 transition-colors">
-                        <UserMinus className="h-3 w-3" />
-                    </button>
-                </Badge>
+                <button
+                  type="button"
+                  onClick={() => toggleSelection(person.id)}
+                  disabled={person.id === disabledId}
+                  className={cn(
+                    "group rounded-full",
+                    person.id === disabledId && "cursor-not-allowed"
+                  )}
+                >
+                  <Badge 
+                    variant="secondary" 
+                    className={cn(
+                      "px-3 py-2 text-sm flex items-center gap-2 transition-colors group-hover:bg-destructive group-hover:text-white",
+                      person.id === disabledId && "opacity-70"
+                    )}
+                  >
+                    <span>{person.first_name} {person.last_name}</span>
+                    <span className="inline-flex items-center justify-center rounded-full border border-transparent p-1">
+                      <UserMinus className="h-4 w-4" />
+                    </span>
+                  </Badge>
+                </button>
                 ))}
             </div>
             ) : (
