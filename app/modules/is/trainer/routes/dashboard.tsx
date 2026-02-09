@@ -1,5 +1,5 @@
-import { useTrainerSchedule } from "./../hooks/use-trainer-dashboard";
-import { TrainingCard } from "~/modules/trainer/components/training-card"; // Import the new component
+import { useTrainerSchedule } from "../hooks/use-trainer-dashboard";
+import { TrainingCard } from "~/modules/is/trainer/components/training-card"; // Import the new component
 import { Skeleton } from "~/components/ui/skeleton";
 import { Activity } from "lucide-react";
 import { useTranslation } from "react-i18next";

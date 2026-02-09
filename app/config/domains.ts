@@ -1,2 +1,2 @@
-export const API_URL = import.meta.env.VITE_API_URL || "http://192.168.0.9:8000";
-export const WEBSITE_URL = import.meta.env.VITE_WEBSITE_URL || "http://192.168.0.9:3000";
+export const API_URL = import.meta.env.VITE_API_URL as string || "http://192.168.0.9:8000" as string;
+export const WEBSITE_URL = import.meta.env.VITE_WEBSITE_URL as string || "http://192.168.0.9:3000" as string;

@@ -10,7 +10,7 @@ import {
 } from "lucide-react"; // Added MapPin
 
 import { apiClient } from "~/lib/api-client";
-import { groupFormSchema, type GroupFormValues } from "~/modules/trainer/types/group-form";
+import { groupFormSchema, type GroupFormValues } from "~/modules/is/trainer/types/group-form";
 
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
@@ -178,7 +178,7 @@ export default function ManageGroupPage() {
                 <FormField control={form.control} name="name" render={({ field }) => (
                   <FormItem className="col-span-2">
                     <FormLabel>{t("trainer.group.group_name")}</FormLabel>
-                    <FormControl><Input placeholder="e.g. Elite Sprinters" {...field} /></FormControl>
+                    <FormControl><Input placeholder={t("trainer.group.group_name_placeholder")} {...field} /></FormControl>
                     <FormMessage />
                   </FormItem>
                 )} />
@@ -214,10 +214,10 @@ export default function ManageGroupPage() {
                       value={field.value}
                       key={field.value}
                     >
-                      <FormControl><SelectTrigger><SelectValue placeholder="Select day" /></SelectTrigger></FormControl>
+                      <FormControl><SelectTrigger><SelectValue placeholder={t("trainer.group.select_day")} /></SelectTrigger></FormControl>
                       <SelectContent>
                         {["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"].map(d => (
-                          <SelectItem key={d} value={d}>{d}</SelectItem>
+                          <SelectItem key={d} value={d}>{t(`days.${d.toLowerCase()}`)}</SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
@@ -233,7 +233,7 @@ export default function ManageGroupPage() {
                       value={field.value}
                       key={field.value}
                     >
-                      <FormControl><SelectTrigger><SelectValue placeholder="Select year" /></SelectTrigger></FormControl>
+                      <FormControl><SelectTrigger><SelectValue placeholder={t("trainer.group.select_year")} /></SelectTrigger></FormControl>
                       <SelectContent>
                         {schoolYears.map((y: any) => (
                           <SelectItem key={y.id} value={y.id}>{y.name}</SelectItem>
@@ -260,7 +260,7 @@ export default function ManageGroupPage() {
                     
                     {/* Label & Icon - Spans full width on mobile */}
                     <div className="flex items-center gap-2 text-orange-700 dark:text-orange-400 font-medium md:col-span-2">
-                      <Sun className="h-5 w-5" /> Summer
+                      <Sun className="h-5 w-5" /> {t("trainer.group.summer")}
                     </div>
 
                     {/* NEW: Default Location (Full width on mobile, Left col on desktop) */}
@@ -269,7 +269,7 @@ export default function ManageGroupPage() {
                         <FormLabel className="text-xs">Default Location</FormLabel>
                         <div className="relative">
                           <MapPin className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                          <Input placeholder="e.g. Outdoor Stadium" className="pl-9 bg-background" {...field} />
+                          <Input placeholder={t("trainer.group.location_placeholder_summer")} className="pl-9 bg-background" {...field} />
                         </div>
                         <FormMessage />
                       </FormItem>
@@ -278,7 +278,7 @@ export default function ManageGroupPage() {
                     {/* Time */}
                     <FormField control={form.control} name="summer_time" render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-xs">Start Time</FormLabel>
+                        <FormLabel className="text-xs">{t("trainer.group.start_time")}</FormLabel>
                         <div className="relative">
                           <Clock className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                           <Input 
@@ -294,7 +294,7 @@ export default function ManageGroupPage() {
                     {/* Duration */}
                     <FormField control={form.control} name="duration_summer" render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-xs">Duration (min)</FormLabel>
+                        <FormLabel className="text-xs">{t("trainer.group.duration_min")}</FormLabel>
                         <div className="relative">
                           <Timer className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                           <Input
@@ -321,16 +321,16 @@ export default function ManageGroupPage() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     
                     <div className="flex items-center gap-2 text-blue-700 dark:text-blue-400 font-medium md:col-span-2">
-                      <Snowflake className="h-5 w-5" /> Winter
+                      <Snowflake className="h-5 w-5" /> {t("trainer.group.winter")}
                     </div>
 
                     {/* NEW: Default Location */}
                     <FormField control={form.control} name="default_location_winter" render={({ field }) => (
                       <FormItem className="md:col-span-2">
-                        <FormLabel className="text-xs">Default Location</FormLabel>
+                        <FormLabel className="text-xs">{t("trainer.group.default_location")}</FormLabel>
                         <div className="relative">
                           <MapPin className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                          <Input placeholder="e.g. Indoor Gym" className="pl-9 bg-background" {...field} />
+                          <Input placeholder={t("trainer.group.location_placeholder_winter")} className="pl-9 bg-background" {...field} />
                         </div>
                         <FormMessage />
                       </FormItem>
@@ -338,7 +338,7 @@ export default function ManageGroupPage() {
                     
                     <FormField control={form.control} name="winter_time" render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-xs">Start Time</FormLabel>
+                        <FormLabel className="text-xs">{t("trainer.group.start_time")}</FormLabel>
                         <div className="relative">
                           <Clock className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                           <Input 
@@ -353,7 +353,7 @@ export default function ManageGroupPage() {
 
                     <FormField control={form.control} name="duration_winter" render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-xs">Duration (min)</FormLabel>
+                        <FormLabel className="text-xs">{t("trainer.group.duration_min")}</FormLabel>
                         <div className="relative">
                           <Timer className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                           <Input

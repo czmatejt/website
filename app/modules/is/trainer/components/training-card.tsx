@@ -17,7 +17,7 @@ import { cn } from "~/lib/utils";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "~/components/ui/card";
-import { type DashboardTraining } from "./../types/trainer";
+import { type DashboardTraining } from "../types/trainer";
 
 interface TrainingCardProps {
   training: DashboardTraining;

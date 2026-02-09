@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "~/lib/api-client"; // Your helper
-import { type DashboardTraining } from "./../types/trainer";
+import { type DashboardTraining } from "../types/trainer";
 
 export function useTrainerSchedule() {
   return useQuery({

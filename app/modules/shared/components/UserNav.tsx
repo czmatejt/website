@@ -65,7 +65,7 @@ export function UserNav() {
         <Button variant="outline" className="relative h-10 w-auto gap-2 rounded-full pl-4 pr-2 hover:bg-slate-100">
           {/* CHANGE 2: Display Name (Hidden on very small phones if needed, or always show) */}
           <span className="hidden text-sm font-medium md:inline-block">
-            {userLoading ? "Loading..." : user?.full_name}
+            {userLoading ? t("shared.loading") : user?.full_name}
           </span>
           {/* CHANGE 3: The Avatar is now smaller and sits inside the button */}
           <Avatar className="h-7 w-7 border border-slate-200">
@@ -82,11 +82,11 @@ export function UserNav() {
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
             <p className="text-sm font-medium leading-none">
-              {userLoading ? "Loading..." : user?.full_name}
+              {userLoading ? t("shared.loading") : user?.full_name}
             </p>
             <p className="text-xs leading-none text-muted-foreground">
               {/* Show the user ID or email from session payload if available */}
-              {!session.loading && user?.email ? user.email : "No email"}
+              {!session.loading && user?.email ? user.email : t("shared.no_email")}
             </p>
           </div>
         </DropdownMenuLabel>
@@ -95,7 +95,7 @@ export function UserNav() {
         <DropdownMenuGroup>
           <DropdownMenuItem className="cursor-pointer" onClick={() => navigate("/is/account/general")}>
             <User className="mr-2 h-4 w-4" />
-            <span>Account</span>
+            <span>{t("shared.account")}</span>
           </DropdownMenuItem>
           {/* <DropdownMenuItem className="cursor-pointer">
             <Settings className="mr-2 h-4 w-4" />
@@ -142,7 +142,7 @@ export function UserNav() {
             onClick={handleLogout}
         >
           <LogOut className="mr-2 h-4 w-4" />
-          <span>Log out</span>
+          <span>{t("shared.logout")}</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

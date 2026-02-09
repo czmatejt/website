@@ -88,24 +88,50 @@ const resources = {
           no_meets_scheduled_soon: "No meets scheduled soon.",
           quick_actions: "Quick Actions",
           add_member_import_results: "Add Member, Import Results...",
-          no_upcoming_trainings: "No upcoming trainings"
+          no_upcoming_trainings: "No upcoming trainings",
+          no_sessions_scheduled_desc: "You don't have any training sessions scheduled. Create your first group to get started."
         },
         attendance: {
           attendance_title: "Attendance",
           select_date_verify_athletes: "Select a date to verify athletes.",
           today: "Today",
           no_sessions_found: "No sessions found",
-          abbreviation_e: "E"
+          abbreviation_e: "E",
+          trainers_payroll: "Trainers (Payroll)",
+          athletes: "Athletes",
+          training_content: "Training Content",
+          content_placeholder: "What did you do today?",
+          save_attendance: "Save Attendance",
+          saving: "Saving...",
+          status_present: "Present",
+          status_absent: "Absent",
+          status_excused: "Excused",
+          status_unmarked: "Unmarked",
+          mark_all_present: "Mark All Present",
+          reset_all: "Reset All",
+          save_success: "Attendance saved successfully!",
+          save_error: "Failed to save attendance.",
+          select_date: "Select a Date"
         },
         group: {
           loading: "Loading...",
           basic_information: "Basic Information",
           group_name: "Group Name",
+          group_name_placeholder: "e.g. Elite Sprinters",
+          description: "Description",
+          description_placeholder: "Describe the group's purpose and goals...",
           training_day: "Training Day",
           school_year: "School Year",
           schedule_settings: "Schedule Settings",
           start_time: "Start Time",
-          duration_min: "Duration (min)"
+          duration_min: "Duration (min)",
+          default_location: "Default Location",
+          location_placeholder_summer: "e.g. Outdoor Stadium",
+          location_placeholder_winter: "e.g. Indoor Gym",
+          select_day: "Select day",
+          select_year: "Select year",
+          summer: "Summer",
+          winter: "Winter"
         }
       },
       shared: {
@@ -123,10 +149,28 @@ const resources = {
         follow_us: "Follow Us",
         no_module_found: "No module found.",
         page_not_found: "Page not found",
+        page_not_found_desc: "Sorry, we couldn't find the page you're looking for. It might have been moved or deleted.",
         go_home: "Go Home",
+        log_in: "Log In",
         report_a_bug: "Report a Bug",
         loading_session: "Loading session...",
+        loading: "Loading...",
+        no_email: "No email",
         access_denied: "Access Denied"
+      },
+      welcome: {
+        whats_next: "What's next?",
+        react_router_docs: "React Router Docs",
+        join_discord: "Join Discord"
+      },
+      days: {
+        monday: "Monday",
+        tuesday: "Tuesday", 
+        wednesday: "Wednesday",
+        thursday: "Thursday",
+        friday: "Friday",
+        saturday: "Saturday",
+        sunday: "Sunday"
       }
     }
   },
@@ -202,6 +246,100 @@ const resources = {
       },
       buttons: {
         save: "Uložit změny",
+      },
+      trainer: {
+        verified: "(Ověřeno)",
+        cancelled: "Zrušeno",
+        finished: "Dokončeno",
+        dashboard: {
+          your_schedule: "Váš rozvrh",
+          next_meet: "Další setkání",
+          no_meets_scheduled_soon: "Žádná setkání nejsou brzy naplánována.",
+          quick_actions: "Rychlé akce",
+          add_member_import_results: "Přidat člena, importovat výsledky...",
+          no_upcoming_trainings: "Žádné nadcházející tréninky",
+          no_sessions_scheduled_desc: "Nemáte naplánované žádné tréninky. Vytvořte svou první skupinu pro začátek."
+        },
+        attendance: {
+          attendance_title: "Docházka",
+          select_date_verify_athletes: "Vyberte datum pro ověření sportovců.",
+          today: "Dnes",
+          no_sessions_found: "Nenalezeny žádné relace",
+          abbreviation_e: "O",
+          trainers_payroll: "Trenéři (Výplatní listina)",
+          athletes: "Sportovci",
+          training_content: "Obsah tréninku",
+          content_placeholder: "Co jste dnes dělali?",
+          save_attendance: "Uložit docházku",
+          saving: "Ukládání...",
+          status_present: "Přítomen",
+          status_absent: "Nepřítomen",
+          status_excused: "Omluvený",
+          status_unmarked: "Neoznačeno",
+          mark_all_present: "Označit všechny jako přítomné",
+          reset_all: "Resetovat vše",
+          save_success: "Docházka byla úspěšně uložena!",
+          save_error: "Nepodařilo se uložit docházku.",
+          select_date: "Vyberte datum"
+        },
+        group: {
+          loading: "Načítání...",
+          basic_information: "Základní informace",
+          group_name: "Název skupiny",
+          group_name_placeholder: "např. Elitní sprinterky",
+          description: "Popis",
+          description_placeholder: "Popište účel a cíle skupiny...",
+          training_day: "Tréninkový den",
+          school_year: "Školní rok",
+          schedule_settings: "Nastavení rozvrhu",
+          start_time: "Čas začátku",
+          duration_min: "Délka (min)",
+          default_location: "Výchozí lokace",
+          location_placeholder_summer: "např. Venkovní stadion",
+          location_placeholder_winter: "např. Vnitřní hala",
+          select_day: "Vyberte den",
+          select_year: "Vyberte rok",
+          summer: "Léto",
+          winter: "Zima"
+        }
+      },
+      shared: {
+        account: "Účet",
+        settings: "Nastavení",
+        logout: "Odhlásit se",
+        product: "Produkt",
+        features: "Funkce",
+        pricing: "Ceny",
+        login: "Přihlášení",
+        support: "Podpora",
+        help_center: "Centrum nápovědy",
+        privacy_policy: "Zásady ochrany osobních údajů",
+        terms_of_service: "Podmínky služby",
+        follow_us: "Sledujte nás",
+        no_module_found: "Modul nenalezen.",
+        page_not_found: "Stránka nenalezena",
+        page_not_found_desc: "Omlouváme se, stránku kterou hledáte se nepodařilo najít. Možná byla přesunuta nebo smazána.",
+        go_home: "Domů",
+        log_in: "Přihlásit se",
+        report_a_bug: "Nahlásit chybu",
+        loading_session: "Načítání relace...",
+        loading: "Načítání...",
+        no_email: "Žádný email",
+        access_denied: "Přístup zamítnut"
+      },
+      welcome: {
+        whats_next: "Co dál?",
+        react_router_docs: "Dokumentace React Router",
+        join_discord: "Připojit se na Discord"
+      },
+      days: {
+        monday: "Pondělí",
+        tuesday: "Úterý",
+        wednesday: "Středa",
+        thursday: "Čtvrtek",
+        friday: "Pátek",
+        saturday: "Sobota",
+        sunday: "Neděle"
       }
     }
   }

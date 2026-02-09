@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { ArrowLeft, Save, Check, X, AlertCircle, HelpCircle, UserCheck, Users } from "lucide-react";
 import { format, parseISO } from "date-fns";
+import { useTranslation } from "react-i18next";
 import { apiClient } from "~/lib/api-client";
 import { Button } from "~/components/ui/button";
 import { Textarea } from "~/components/ui/textarea";
@@ -33,30 +34,9 @@ interface AttendanceDetail {
 
 // --- Translations / Dictionary ---
 // Replace this with your actual i18n hook (e.g., useTranslation)
-const t = {
-  header: {
-    trainers: "Trainers (Payroll)",
-    athletes: "Athletes",
-    content: "Training Content",
-    placeholder: "What did you do today?",
-    save: "Save Attendance",
-    saving: "Saving...",
-  },
-  status: {
-    present: "Present",
-    absent: "Absent",
-    excused: "Excused",
-    unmarked: "Unmarked",
-    mark_all: "Mark All Present",
-    unmark_all: "Reset All",
-  },
-  toast: {
-    success: "Attendance saved successfully!",
-    error: "Failed to save attendance.",
-  }
-};
 
 export default function TakeAttendancePage() {
+  const { t } = useTranslation();
   const { id } = useParams();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -130,7 +110,7 @@ export default function TakeAttendancePage() {
     },
     onSuccess: () => {
       //make it green
-      toast.success(t.toast.success, { duration: 4000 , style: { background: 'green', color: 'white' } });
+      toast.success(t("trainer.attendance.save_success"), { duration: 4000 , style: { background: 'green', color: 'white' } });
       
       // 1. Refresh the Calendar/List (so the "Present" count updates there)
       queryClient.invalidateQueries({ queryKey: ["trainer", "schedule"] });
@@ -141,7 +121,7 @@ export default function TakeAttendancePage() {
       
       navigate(-1);
     },
-    onError: () => toast.error(t.toast.error, { duration: 4000 , style: { background: 'red', color: 'white' } }),
+    onError: () => toast.error(t("trainer.attendance.save_error"), { duration: 4000 , style: { background: 'red', color: 'white' } }),
   });
 
   if (isLoading || !data) return <AttendanceSkeleton />;
@@ -165,7 +145,7 @@ export default function TakeAttendancePage() {
         </div>
         <div className="ml-auto">
            <Badge variant={presentCount === data.athletes.length ? "default" : "secondary"}>
-             {presentCount} / {data.athletes.length} {t.status.present}
+             {presentCount} / {data.athletes.length} {t("trainer.attendance.status_present")}
            </Badge>
         </div>
       </div>
@@ -176,7 +156,7 @@ export default function TakeAttendancePage() {
         <section className="bg-muted/30 rounded-xl p-4 border space-y-3">
           <h2 className="text-sm font-semibold flex items-center gap-2 text-primary">
             <UserCheck className="h-4 w-4" /> 
-            {t.header.trainers}
+            {t("trainer.attendance.trainers_payroll")}
           </h2>
           <div className="grid gap-2">
             {data.trainers.map(trainer => (
@@ -194,12 +174,12 @@ export default function TakeAttendancePage() {
         {/* SECTION 2: CONTENT */}
         <section className="space-y-2">
           <label className="text-sm font-medium text-muted-foreground ml-1">
-            {t.header.content}
+            {t("trainer.attendance.training_content")}
           </label>
           <Textarea 
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            placeholder={t.header.placeholder}
+            placeholder={t("trainer.attendance.content_placeholder")}
             className="bg-muted/20 resize-none min-h-[100px]"
           />
         </section>
@@ -209,7 +189,7 @@ export default function TakeAttendancePage() {
           <div className="flex justify-between items-center px-1">
             <h2 className="font-semibold flex items-center gap-2">
               <Users className="h-4 w-4" />
-              {t.header.athletes}
+              {t("trainer.attendance.athletes")}
             </h2>
             <Button 
               variant="link" 
@@ -217,7 +197,7 @@ export default function TakeAttendancePage() {
               className="h-auto p-0 text-primary"
               onClick={() => markAll('athlete', isAllAthletesMarked ? '' : 'p')}
             >
-              {isAllAthletesMarked ? t.status.unmark_all : t.status.mark_all}
+              {isAllAthletesMarked ? t("trainer.attendance.reset_all") : t("trainer.attendance.mark_all_present")}
             </Button>
           </div>
 
@@ -244,7 +224,7 @@ export default function TakeAttendancePage() {
             onClick={() => saveMutation.mutate()}
             disabled={saveMutation.isPending}
           >
-            {saveMutation.isPending ? t.header.saving : t.header.save}
+            {saveMutation.isPending ? t("trainer.attendance.saving") : t("trainer.attendance.save_attendance")}
             {!saveMutation.isPending && <Save className="ml-2 h-4 w-4" />}
           </Button>
         </div>
@@ -267,18 +247,19 @@ function AttendanceRow({
   onClick: () => void; 
 }) {
   const isCustomReason = status && !['p', 'a', 'e'].includes(status);
+  const { t } = useTranslation();
 
   // Visual Logic
   let containerClass = "bg-card border-dashed border-muted-foreground/30 opacity-80 hover:opacity-100";
   let icon = <HelpCircle className="h-4 w-4 text-muted-foreground" />;
-  let statusText = t.status.unmarked;
+  let statusText = t("trainer.attendance.status_unmarked");
   let badgeClass = "bg-muted text-muted-foreground";
   let avatarClass = "bg-muted text-muted-foreground";
 
   if (status === 'p') {
     containerClass = "bg-green-50/50 border-solid border-green-200 dark:bg-green-900/10 dark:border-green-900 opacity-100";
     icon = <Check className="h-4 w-4 text-white" />;
-    statusText = t.status.present;
+    statusText = t("trainer.attendance.status_present");
     badgeClass = "bg-green-600 text-white";
     avatarClass = "bg-green-600 text-white";
   } 
@@ -286,14 +267,14 @@ function AttendanceRow({
     // RED for Absent
     containerClass = "bg-red-50/50 border-solid border-red-200 dark:bg-red-900/10 dark:border-red-900 opacity-100";
     icon = <X className="h-4 w-4 text-white" />;
-    statusText = t.status.absent;
+    statusText = t("trainer.attendance.status_absent");
     badgeClass = "bg-red-600 text-white";
     avatarClass = "bg-red-100 text-red-700";
   } 
   else if (status === 'e') {
     containerClass = "bg-amber-50/50 border-solid border-amber-200 dark:bg-amber-900/10 dark:border-amber-900 opacity-100";
     icon = <span className="text-[10px] font-bold text-amber-900">E</span>;
-    statusText = t.status.excused;
+    statusText = t("trainer.attendance.status_excused");
     badgeClass = "bg-amber-300 text-amber-900";
     avatarClass = "bg-amber-100 text-amber-700";
   } 

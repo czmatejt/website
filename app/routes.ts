@@ -25,20 +25,20 @@ export default [
         route("portal", "routes/is/portal.tsx"),
 
         ...prefix("account", [
-          index("modules/account/routes/account-redirect.tsx"), // /is/account
+          index("modules/is/account/routes/account-redirect.tsx"), // /is/account
 
-          route("general", "modules/account/routes/general.tsx"), // /is/account
-          route("security", "modules/account/routes/security.tsx"), // /is/account
+          route("general", "modules/is/account/routes/general.tsx"), // /is/account
+          route("security", "modules/is/account/routes/security.tsx"), // /is/account
         ]),
 
         ...prefix("trainer", [
-          layout("modules/trainer/routes/trainer-layout.tsx", [
-          index("modules/trainer/routes/trainer-redirect.tsx"), // /is/trainer
+          layout("modules/is/trainer/routes/trainer-layout.tsx", [
+          index("modules/is/trainer/routes/trainer-redirect.tsx"), // /is/trainer
           
-          route("dashboard", "modules/trainer/routes/dashboard.tsx"), // /is/trainer
-          route("attendance", "modules/trainer/routes/attendance/index.tsx"), // /is/trainer
-          route("attendance/:id", "modules/trainer/routes/attendance/$id.tsx"), // /is/trainer
-          route("groups/:id", "modules/trainer/routes/groups/$id.tsx"), // /is/trainer/groups/:id
+          route("dashboard", "modules/is/trainer/routes/dashboard.tsx"), // /is/trainer
+          route("attendance", "modules/is/trainer/routes/attendance/index.tsx"), // /is/trainer
+          route("attendance/:id", "modules/is/trainer/routes/attendance/$id.tsx"), // /is/trainer
+          route("groups/:id", "modules/is/trainer/routes/groups/$id.tsx"), // /is/trainer/groups/:id
 
         ])]),
     

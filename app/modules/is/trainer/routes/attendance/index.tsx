@@ -6,8 +6,8 @@ import { Calendar } from "~/components/ui/calendar";
 import { Button } from "~/components/ui/button";
 import { Plus, RefreshCw, Calendar as CalendarIcon } from "lucide-react"; // Renamed icon
 import { apiClient } from "~/lib/api-client";
-import { type DashboardTraining } from "./../../types/trainer";
-import { TrainingCard } from "~/modules/trainer/components/training-card";
+import { type DashboardTraining } from "../../types/trainer";
+import { TrainingCard } from "~/modules/is/trainer/components/training-card";
 import { Badge } from "~/components/ui/badge";
 import { cn } from "~/lib/utils";
 
@@ -105,7 +105,7 @@ export default function AttendanceOverview() {
           <div className="sticky top-0 z-10 bg-background/95 backdrop-blur py-4 border-b mb-4 flex rounded-lg justify-between items-center transition-all">
             <div>
               <h2 className="text-xl px-4 font-semibold flex items-center gap-2">
-                {date ? format(date, "EEEE, MMM do") : "Select a Date"}
+                {date ? format(date, "EEEE, MMM do") : t("trainer.attendance.select_date")}
                 {date && isToday(date) && <Badge variant="secondary">{t("trainer.attendance.today")}</Badge>}
               </h2>
             </div>
