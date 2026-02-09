@@ -1,0 +1,81 @@
+version: '3.8'
+
+services:
+  website:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: website-app
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - VITE_API_URL=${VITE_API_URL}
+      - VITE_WEBSITE_URL=${VITE_WEBSITE_URL}
+      # Add any other environment variables your app needs
+      # - API_URL=http://localhost:8080
+      # - DATABASE_URL=postgresql://user:password@db:5432/website
+      # - SUPERTOKENS_CONNECTION_URI=http://supertokens:3567
+      # - SUPERTOKENS_API_KEY=your-api-key
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/health", "||", "curl", "-f", "http://localhost:3000", "||", "exit", "1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    # Uncomment if you need to connect to other services
+    # depends_on:
+    #   - db
+    #   - redis
+    #   - supertokens
+    volumes:
+      # Mount logs directory if needed
+      - ./logs:/app/logs
+
+  # Uncomment and configure these services if your app needs them
+
+  # # PostgreSQL Database
+  # db:
+  #   image: postgres:15-alpine
+  #   container_name: website-db
+  #   environment:
+  #     POSTGRES_DB: website
+  #     POSTGRES_USER: user
+  #     POSTGRES_PASSWORD: password
+  #   volumes:
+  #     - postgres_data:/var/lib/postgresql/data
+  #     - ./db/init:/docker-entrypoint-initdb.d
+  #   ports:
+  #     - "5432:5432"
+  #   restart: unless-stopped
+  #   healthcheck:
+  #     test: ["CMD-SHELL", "pg_isready -U user -d website"]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 5
+
+  # # Redis for caching/sessions
+  # redis:
+  #   image: redis:7-alpine
+  #   container_name: website-redis
+  #   ports:
+  #     - "6379:6379"
+  #   volumes:
+  #     - redis_data:/data
+  #   restart: unless-stopped
+  #   healthcheck:
+  #     test: ["CMD", "redis-cli", "ping"]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 5
+
+# volumes:
+#   postgres_data:
+#   redis_data:
+
+networks:
+  default:
+    name: website-network
+    driver: bridge
