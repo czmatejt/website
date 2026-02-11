@@ -16,6 +16,7 @@ export function SignUpForm() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [error2, setError2] = useState<string | null>(null);
 
   // Get Tenant ID from env (default to safe fallback)
   //const TENANT_ID = import.meta.env.VITE_TENANT_ID || "DEFAULT_CLUB";
@@ -24,6 +25,7 @@ export function SignUpForm() {
     e.preventDefault();
     setIsLoading(true);
     setError(null);
+    setError2(null);
 
     // 1. Client-side Validation
     if (password !== confirmPassword) {
@@ -46,6 +48,7 @@ export function SignUpForm() {
         // Handle API errors (e.g., email already exists)
         response.formFields.forEach((field) => {
           if (field.id === "email") setError(field.error);
+          if (field.id === "password") setError2(field.error);
         });
       } else if (response.status === "SIGN_UP_NOT_ALLOWED") {
         setError(t("auth.sign_up_not_allowed"));
@@ -68,6 +71,12 @@ export function SignUpForm() {
           {error && (
             <Alert variant="destructive">
               <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          )}
+
+          {error2 && (
+            <Alert variant="destructive">
+              <AlertDescription>{error2}</AlertDescription>
             </Alert>
           )}
 
