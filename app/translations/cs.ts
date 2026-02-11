@@ -26,6 +26,7 @@ const cs = {
         link_sent_desc: "Odeslali jsme odkaz pro obnovení hesla na",
         password_reset_success: "Heslo obnoveno! Přesměrovávám na přihlášení...",
         back_to_login: "Zpět na přihlášení",
+        sign_up_not_allowed: "Registrace není pro tento email povolena. Pokud si myslíte, že se jedná o chybu, kontaktujte podporu."
       },
       theme: {
         toggle: "Přepnout motiv",

@@ -7,6 +7,7 @@ import { Label } from "~/components/ui/label";
 import { Alert, AlertDescription } from "~/components/ui/alert";
 import { Loader2 } from "lucide-react";
 import { PasswordInput } from "./password-input";
+import { set } from "zod";
 
 export function SignUpForm() {
   const { t } = useTranslation();
@@ -46,6 +47,8 @@ export function SignUpForm() {
         response.formFields.forEach((field) => {
           if (field.id === "email") setError(field.error);
         });
+      } else if (response.status === "SIGN_UP_NOT_ALLOWED") {
+        setError(t("auth.sign_up_not_allowed"));
       } else if (response.status === "OK") {
         // 3. Success -> Redirect to Portal
         window.location.href = "/is/portal";

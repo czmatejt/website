@@ -26,6 +26,7 @@ const en = {
         link_sent_desc: "We have sent a password reset link to",
         password_reset_success: "Password updated! Redirecting to login...",
         back_to_login: "Back to Login",
+        sign_up_not_allowed: "Sign up is not allowed for this email. If you believe this is a mistake, please contact support."
       },
       theme: {
         toggle: "Toggle theme",

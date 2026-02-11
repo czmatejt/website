@@ -53,7 +53,7 @@ export default function SignUpPage() {
         <div className="flex flex-col items-center gap-2 text-center">
            {/* <img src="/logo.webp" className="h-10 w-10" /> */}
           <div className="flex items-center gap-2 font-bold text-2xl text-primary">
-            TrackMeet
+            KLUBIS
           </div>
         </div>
 
